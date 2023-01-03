@@ -8,7 +8,7 @@ const pool = createPool ({
     connectionLimit: 10,
 });
 
-pool.query(`select * from post`, (err, result, fields) => {
+pool.query(`select * from user_info`, (err, result, fields) => {
     if(err) {
         return console.log(err);
     }
