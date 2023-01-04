@@ -1,5 +1,5 @@
 <template>
-    <h4>{{ test[0].firstName }} {{ test[0].lastName }}</h4> <p>{{ test[0].jobPosition }}</p> 
+    <h4>{{ userInfo[0].firstName }} {{ userInfo[0].lastName }}</h4> <p>{{ userInfo[0].jobPosition }}</p> 
 </template>
 
 <script>
@@ -8,7 +8,7 @@ export default {
     data(){
         //fetch API for user info 
         return { 
-            test: [{
+            userInfo: [{
                 userID: '',
                 firstName: '',
                 lastName: '',
@@ -21,13 +21,13 @@ export default {
         async fetchTest() {
     //        let id =  req.params.id
         const res = await fetch(`http://localhost:3000/userInfo/1`)
-        const testing = await res.json()
-        return testing
+        const data = await res.json()
+        return data
       },
       
     },
     async created() {
-      this.test = await this.fetchTest()
+      this.userInfo = await this.fetchTest()
     },
 }
 </script>

@@ -30,7 +30,7 @@ app.use('/images', express.static(path.join(__dirname, 'images')));
 
 
 
-app.use(`/userInfo/:id`, (req, res, next) => {
+app.get(`/userInfo/:id`, (req, res, next) => {
     let id =  req.params.id
     database.query(`SELECT * FROM user_info WHERE userID LIKE ${id};`, (err, result, fields) => {
     if(err) {
