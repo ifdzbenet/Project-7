@@ -11,7 +11,7 @@
             <a href="#" id="drop-down-user" @click="toggleDropDown()" >
                 <img id="user-icon" src="../assets/placeholder-user-icon.svg">
                 <div id="user-info">
-                    <h4>{{ firstName }} {{ lastName }}</h4> <p>{{ jobPosition }}</p>
+                  <UserInfo />
                 </div>
                 <img id="arrow" src="../assets/chevron-down-solid.svg">
             </a>
@@ -22,30 +22,27 @@
 
 <script>
 import UserDropDown from './UserDropDown.vue'
+import UserInfo from './UserInfo.vue'
 
-    export default {
-        name: 'Header',
-        data(){
-            //fetch API for user info 
-            return { //placeholder info for development 
-                image: '../assets/placeholder-user-icon.svg',
-                firstName: 'Ines',
-                lastName: 'Fernandez',
-                jobPosition: 'Lead Designer',
-
-                //Boolean to show the drop down
-                showDropDown: false,
-            }
-        },
-        components: {
-            UserDropDown
-        },
-        methods: {
-        toggleDropDown() {
-            this.showDropDown = !this.showDropDown
-        },
-    }
-    }
+  export default {
+    name: 'Header',
+    components: {
+      UserDropDown,
+      UserInfo
+    },
+    data(){
+        return { 
+          //Boolean to show the drop down
+          showDropDown: false,
+        }
+    },
+    methods: {
+      toggleDropDown() {
+        this.showDropDown = !this.showDropDown
+      },
+    },
+        
+  }
 
 </script>
 
@@ -64,16 +61,6 @@ header div {
   flex-flow: row;
   justify-content: space-between;
   align-items: center;  
-}
-
-h4 {
-    font-size: 1em;
-    margin: 0;
-}
-
-p {
-    font-size: 0.8em;
-    margin: 0;
 }
 
 div {

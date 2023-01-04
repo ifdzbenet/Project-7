@@ -3,6 +3,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
+const database = require('./database');
 
 //const userRoutes = require('./routes/user');
 //const postRoutes = require('./routes/post');
@@ -26,5 +27,19 @@ app.use('/images', express.static(path.join(__dirname, 'images')));
 // api endpoints for the paths
 //app.use('/api/auth', userRoutes);
 //app.use('/api/post', postRoutes);
+
+
+
+app.use(`/userInfo/:id`, (req, res, next) => {
+    let id =  req.params.id
+    database.query(`SELECT * FROM user_info WHERE userID LIKE ${id};`, (err, result, fields) => {
+    if(err) {
+        return console.log(err);
+    }
+    return res.status(200).send(result)
+    })   
+});
+
+
 
 module.exports = app;
