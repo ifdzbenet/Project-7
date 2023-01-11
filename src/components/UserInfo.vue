@@ -18,7 +18,7 @@ export default {
         }
     },
     methods: {
-        async fetchTest() {
+        async fetchUserInfo() {
     //        let id =  req.params.id
         const res = await fetch(`http://localhost:3000/userInfo/1`)
         const data = await res.json()
@@ -27,7 +27,7 @@ export default {
       
     },
     async created() {
-      this.userInfo = await this.fetchTest()
+      this.userInfo = await this.fetchUserInfo()
     },
 }
 </script>

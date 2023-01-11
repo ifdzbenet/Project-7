@@ -8,32 +8,32 @@
             </div>
             <div id="form-body">
                 <div id="form-sign-up" v-if="showSignUp">
-                    <form method="post">
-                        <label for="first-name">First Name</label>
-                        <input type="text" id="first-name" name="first-name">
+                    <form method="get" @submit.prevent="">
+                        <label for="firstName">First Name</label>
+                        <input type="text" id="firstName" name="firstName" v-model="formData.firstName">
                         <div class="fake_hr"></div>
-                        <label for="last-name">Last Name</label>
-                        <input type="text" id="last-name"  name="last-name">
+                        <label for="lastName">Last Name</label>
+                        <input type="text" id="lastName"  name="lastName" v-model="formData.lastName">
                         <div class="fake_hr"></div>
                         <label for="email">E-mail</label>
-                        <input type="email" id="email" name="email">
+                        <input type="email" id="email" name="email" v-model="formData.email">
                         <div class="fake_hr"></div>
                         <label for="password">Password</label>
-                        <input type="text" id="password" name="password">
+                        <input type="text" id="password" name="password" v-model="formData.password">
                         <div class="fake_hr"></div>
-                        <input type="submit" value="Submit" class="button">
+                        <input type="submit" value="Submit" class="button" @click="postSignUp()" />
                     </form>
                     <p>Already have an account?<button class="toggle_button" @click="turnLogIn()">Log in</button></p>
                 </div>
                 <div id="form-log-in" v-if="showLogIn"> 
-                    <form method="post">
+                    <form method="post" @submit.prevent="">
                         <label for="email">E-mail</label>
-                        <input type="email" id="email" name="email">
+                        <input type="email" id="email" name="email" v-model="formData.email">
                         <div class="fake_hr"></div>
                         <label for="password">Password</label>
-                        <input type="text" id="password" name="password">
+                        <input type="text" id="password" name="password" v-model="formData.password">
                         <div class="fake_hr"></div>
-                        <input type="submit" value="Submit" class="button nottransparent">
+                        <input type="submit" value="Submit" class="button nottransparent" @click="postLogin()">
                     </form>
                     <p>Need an account? <button class="toggle_button" @click="turnSignUp()">Sign up</button></p>
                 </div>
@@ -43,7 +43,7 @@
 </template>
 
 <script>
-
+import axios from 'axios'
 export default {
     name: 'LogInSignUp',
     components: {
@@ -55,21 +55,48 @@ export default {
           showLogIn: true,
           showSignUp: false,
           //welcomeMessage = true
+          formData: {
+            firstName: '',
+            lastName: '',
+            email: '',
+            password: ''
+          }
         }
     },
     methods: {
-    turnLogIn() {
-        this.showSignUp = false
-        this.showLogIn = true
-        //this.welcomeMessage = false
+        turnLogIn() {
+            this.showSignUp = false
+            this.showLogIn = true
+            //this.welcomeMessage = false
+        },
+        turnSignUp() {
+            this.showSignUp = true
+            this.showLogIn = false
+            //this.welcomeMessage = false
+        },
+
+        async postSignUp() {
+            if (this.formData.firstName && this.formData.lastName && this.formData.email && this.formData.password !== '') {
+                axios.post('http://localhost:3000/signup', this.formData)
+                .then(response => console.log(response))
+                .then(function() {window.location = "http://localhost:8080/"; })
+                .catch(error => console.log(error))
+            } else {
+                console.log('no') 
+            }
+            
+        },
+
+        async postLogin() {
+                axios.post('http://localhost:3000/login', this.formData)
+                .then(response => console.log(response))
+                //.then(function() {window.location = "http://localhost:8080/"; })
+                .catch(error => console.log(error))
+        }
     },
-    turnSignUp() {
-        this.showSignUp = true
-        this.showLogIn = false
-        //this.welcomeMessage = false
-    },
-    }
 }
+
+
 </script>
 
 <style scoped>
