@@ -8,9 +8,19 @@ exports.signup = async (req, res, next) => {
     const lastName = req.body.lastName;
     const email = req.body.email;
     const password = req.body.password;
+    const signUpDate = new Date().toISOString().slice(0, 19).replace('T', ' ');
     const hash = await bcrypt.hash(password, 10);
-    await database.query(`INSERT INTO testing (firstName, lastName, email, password) VALUES ('${firstName}', '${lastName}', '${email}', '${hash}')`);
-    res.status(200).json('All good!');
+    await database.query(`INSERT INTO user_info (firstName, lastName, email, password, sign_up_date) VALUES ('${firstName}', '${lastName}', '${email}', '${hash}', '${signUpDate}');`);
+    //jsonwebtoken
+    await database.query(`SELECT * FROM user_info WHERE email LIKE '${req.body.email}'`, (err, result, fields) =>{
+        const token = jwt.sign(
+            {userId: result[0].userID},
+            'RANDOM_TOKEN_SECRET',
+            {expiresIn: '24h'});
+            return res.status(200).json({
+                userId: result[0].userID,
+                token: token
+            });})
     } catch (error) {
         console.log(error);
         res.status(500).send('Something broke');
@@ -20,23 +30,21 @@ exports.signup = async (req, res, next) => {
 exports.login = async (req, res, next) => {
     try {
         const email = req.body.email;
-        await database.query(`SELECT * FROM testing WHERE email LIKE '${email}'`, (err, result, fields) =>{
+        await database.query(`SELECT * FROM user_info WHERE email LIKE '${email}'`, (err, result, fields) =>{
             if(err) {
                 return console.log(err);
             }
-            //return res.status(200).send(result)
             //bcrypt
             bcrypt.compare(req.body.password, result[0].password, (error, valid) => {
                 if (valid) {
+                    
                     // jsonwebtoken
                     const token = jwt.sign(
-                        {userId: result[0].testID},
+                        {userId: result[0].userID},
                         'RANDOM_TOKEN_SECRET',
                         {expiresIn: '24h'});
-                        //localStorage.setItem('token', token);
-                        //console.log(localStorage.getItem('token') );
                         return res.status(200).json({
-                            userId: result[0].testID,
+                            userId: result[0].userID,
                             token: token
                         });
                     //
@@ -46,12 +54,15 @@ exports.login = async (req, res, next) => {
                         error: error
                     });
                 }
-            })
+            });
+            const logInDate = new Date().toISOString().slice(0, 19).replace('T', ' ');
+            database.query(`UPDATE user_info SET log_in_date ='${logInDate}';`);
+
             
             //
         })
     } catch (error) {
-            console.log('the connection with the db is cucked')
+            console.log('the connection with the db is altered')
             return res.status(500).json({
             error: error
         });
@@ -60,10 +71,12 @@ exports.login = async (req, res, next) => {
 
 exports.userinfo = async (req, res, next) => {
     let id =  req.params.id
-    database.query(`SELECT * FROM testing WHERE testID LIKE ${id};`, (err, result, fields) => {
+    database.query(`SELECT * FROM user_info WHERE userID LIKE ${id};`, (err, result, fields) => {
     if(err) {
         return console.log(err);
     }
+    //protect the user's password by deleting it before sending it back to the client
+    delete result[0].password;
     return res.status(200).send(result)
     })   
 };

@@ -8,7 +8,7 @@
             </div>
             <div id="form-body">
                 <div id="form-sign-up" v-if="showSignUp">
-                    <form method="get" @submit.prevent="">
+                    <form method="get" @submit.prevent="" novalidate="true">
                         <label for="firstName">First Name</label>
                         <input type="text" id="firstName" name="firstName" v-model="formData.firstName">
                         <div class="fake_hr"></div>
@@ -19,24 +19,27 @@
                         <input type="email" id="email" name="email" v-model="formData.email">
                         <div class="fake_hr"></div>
                         <label for="password">Password</label>
-                        <input type="text" id="password" name="password" v-model="formData.password">
+                        <input type="password" id="password" name="password" v-model="formData.password">
                         <div class="fake_hr"></div>
                         <input type="submit" value="Submit" class="button" @click="postSignUp()" />
                     </form>
                     <p>Already have an account?<button class="toggle_button" @click="turnLogIn()">Log in</button></p>
                 </div>
                 <div id="form-log-in" v-if="showLogIn"> 
-                    <form method="post" @submit.prevent="">
+                    <form method="post" @submit.prevent="" novalidate="true">
                         <label for="email">E-mail</label>
                         <input type="email" id="email" name="email" v-model="formData.email">
                         <div class="fake_hr"></div>
                         <label for="password">Password</label>
-                        <input type="text" id="password" name="password" v-model="formData.password">
+                        <input type="password" id="password" name="password" v-model="formData.password">
                         <div class="fake_hr"></div>
                         <input type="submit" value="Submit" class="button nottransparent" @click="postLogin()">
                     </form>
                     <p>Need an account? <button class="toggle_button" @click="turnSignUp()">Sign up</button></p>
                 </div>
+            </div>
+            <div id="errormsg" v-if="authError">
+                <img src="../assets/circle-xmark-regular.svg"><p>Error: </p><p id="error"> {{ errormsg }}</p>
             </div>
         </div>
     </div>
@@ -45,15 +48,20 @@
 <script>
 import axios from 'axios'
 export default {
-    name: 'LogInSignUp',
+    name: 'Authentification',
     components: {
 
     },
     data(){
         return { 
-          //Boolean to show the drop down
+          //Boolean to toggle between sign up and log in
+          authError: false,
           showLogIn: true,
           showSignUp: false,
+          //handling error in authentification
+          errormsg: '',
+          validRegex: /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
+
           //welcomeMessage = true
           formData: {
             firstName: '',
@@ -67,34 +75,45 @@ export default {
         turnLogIn() {
             this.showSignUp = false
             this.showLogIn = true
-            //this.welcomeMessage = false
         },
         turnSignUp() {
             this.showSignUp = true
             this.showLogIn = false
-            //this.welcomeMessage = false
         },
+        
 
         async postSignUp() {
             if (this.formData.firstName && this.formData.lastName && this.formData.email && this.formData.password !== '') {
-                axios.post('http://localhost:3000/signup', this.formData)
-                .then(response => console.log(response))
-                .then(function() {window.location = "http://localhost:8080/"; })
-                .catch(error => console.log(error))
+                if (this.formData.email.match(this.validRegex)) {
+                    axios.post('http://localhost:3000/signup', this.formData)
+                    .then(response => localStorage.setItem('token', response.data.token))
+                    .then(function() {window.location = "http://localhost:8080/"; })
+                    .catch(error => console.log(error))
+                } else {
+                    this.errormsg = 'Introduce a valid e-mail'
+                    this.authError = true;
+                }
             } else {
-                console.log('fill the fields') 
+                this.errormsg = 'One or more fields are not completed'
+                this.authError = true;
             }
             
         },
 
         async postLogin() {
             if (this.formData.email && this.formData.password !== '') {
-                axios.post('http://localhost:3000/login', this.formData)
-                //.then(response => localStorage.setItem('token', response.data.token))
-                .then(function() {window.location = "http://localhost:8080/"; })
-                .catch(error => console.log(error))
+                if (this.formData.email.match(this.validRegex)) {
+                    axios.post('http://localhost:3000/login', this.formData)
+                    .then(response => localStorage.setItem('token', response.data.token))
+                    .then(function() {window.location = "http://localhost:8080/"; })
+                    .catch(error => console.log(error))
+                }  else {
+                    this.errormsg = 'Introduce a valid e-mail'
+                    this.authError = true;
+                }
             } else {
-                console.log('fill the fields') 
+                this.errormsg = 'One or both fields are not completed'
+                this.authError = true; 
             }
         }
     },
@@ -108,7 +127,6 @@ export default {
 p {
     margin: 0;
     font-size: 14px;
-    color: black;
 }
 
 #container {
@@ -121,16 +139,17 @@ p {
     align-items: center;
 }
 
-#container #content {
+#content {
     height: 100%;
     width: 30%;
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
+    justify-content: flex-start;
     background-image: url("../assets/backgrounds/welcome_design.png");
     background-repeat: no-repeat;
     background-size: cover;
     border-radius: 20px;
+    
 }
 
 #welcome-message {
@@ -182,8 +201,8 @@ p {
 
 
 #form-body {
-    padding: 0 20px 0 20px;
-    height: 60%;
+    padding: 10px 20px 0 20px;
+    height: 55%;
 }
 
 #form-log-in {
@@ -235,4 +254,21 @@ input {
     background-color: white;
     margin-top: -15px;
 }
+
+#errormsg {
+    background-color: rgba(255, 255, 255, 0.334);
+    color: #FD2D01;
+    padding-left: 2em;
+    display: flex;
+    flex-flow: row;
+    align-items: center;
+}
+
+#errormsg img {
+    height: 1em;
+    width: 1em;
+    padding: 0.5em;
+    filter: opacity(0.4) drop-shadow(0 0 0 #FD2D01);
+}
+
 </style>

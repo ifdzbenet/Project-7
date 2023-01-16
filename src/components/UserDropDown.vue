@@ -1,16 +1,22 @@
 <template>
     <div id="drop-down">
-        <a href="#" class="drop-down-option">Profile</a>
-        <a href="#" class="drop-down-option">Favourite Posts</a>
-        <a href="#" class="drop-down-option">Configuration</a>
-        <a href="#" class="drop-down-option">Log out</a>
+        <button  class="drop-down-option">Profile</button>
+        <button  class="drop-down-option">Favourite Posts</button>
+        <button  class="drop-down-option">Configuration</button>
+        <button @click="logOut()" class="drop-down-option">Log out</button>
     </div>
 </template>
 
 <script>
 export default {
     name: 'UserDropDown',
-
+    methods: {
+        logOut() {
+            localStorage.removeItem('token')
+            window.location = "http://localhost:8080/auth";
+        },
+      
+    },
 }
 </script>
 
