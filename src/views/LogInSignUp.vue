@@ -82,16 +82,20 @@ export default {
                 .then(function() {window.location = "http://localhost:8080/"; })
                 .catch(error => console.log(error))
             } else {
-                console.log('no') 
+                console.log('fill the fields') 
             }
             
         },
 
         async postLogin() {
+            if (this.formData.email && this.formData.password !== '') {
                 axios.post('http://localhost:3000/login', this.formData)
-                .then(response => console.log(response))
-                //.then(function() {window.location = "http://localhost:8080/"; })
+                //.then(response => localStorage.setItem('token', response.data.token))
+                .then(function() {window.location = "http://localhost:8080/"; })
                 .catch(error => console.log(error))
+            } else {
+                console.log('fill the fields') 
+            }
         }
     },
 }

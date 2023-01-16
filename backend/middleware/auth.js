@@ -1,19 +1,26 @@
-//const jwt = require('jsonwebtoken');
+const database = require('../database');
+const jwt = require('jsonwebtoken');
 
-//// authorisation function to check the user's credentials
-//module.exports = (req, res, next) => {
-//  try {
-//    const token = req.headers.authorization.split(' ')[1];
-//    const decodedToken = jwt.verify(token, 'RANDOM_TOKEN_SECRET');
-//    const userId = decodedToken.userId;
-//    if (req.body.userId && req.body.userId !== userId) {
-//      throw 'Invalid user ID';
-//    } else {
-//      next();
-//    }
-//  } catch {
-//    res.status(401).json({
-//      error: new Error('Invalid request')
-//    });
-//  }
-//};
+// authorisation function to check the user's credentials
+module.exports = async (req, res, next) => {
+  try {
+    const token = localStorage.getItem('token').split(' ')[1];
+    const decodedToken = jwt.verify(token, 'RANDOM_TOKEN_SECRET');
+    const userId = decodedToken.userId;
+    await database.query(`SELECT * FROM testing WHERE testID LIKE '${userId}'`, (err, result, fields) =>{
+        if (result[0].testID && result[0].testID !== userId) {
+            console.log('Invalid user ID');
+            throw 'Invalid user ID';
+        } else {
+        console.log('yes');
+        next();
+        
+        }
+    })
+    } catch {
+        console.log('no');
+        return res.status(401).json({
+            error: new Error('Invalid request')
+        });
+    }
+}; 

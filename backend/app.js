@@ -2,10 +2,10 @@
 
 const express = require('express');
 const bodyParser = require('body-parser');
-const path = require('path');
+//const path = require('path');
 const database = require('./database');
 
-//const userRoutes = require('./routes/user');
+const userRoutes = require('./routes/user');
 //const postRoutes = require('./routes/post');
 
 const app = express();
@@ -22,17 +22,17 @@ app.use((req, res, next) => {
 app.use(bodyParser.json());
 
 // upload pictures to the images folder through multer
-app.use('/images', express.static(path.join(__dirname, 'images')));
+//app.use('/images', express.static(path.join(__dirname, 'images')));
 
 // api endpoints for the paths
-//app.use('/api/auth', userRoutes);
+app.use('/', userRoutes);
 //app.use('/api/post', postRoutes);
 
 
-
+/*
 app.get(`/userInfo/:id`, (req, res, next) => {
     let id =  req.params.id
-    database.query(`SELECT * FROM user_info WHERE userID LIKE ${id};`, (err, result, fields) => {
+    database.query(`SELECT * FROM testing WHERE testID LIKE ${id};`, (err, result, fields) => {
     if(err) {
         return console.log(err);
     }
@@ -66,17 +66,18 @@ app.post(`/login`, async (req, res, next) => {
                 return console.log(err);
             }
             //return res.status(200).send(result)
-            //
+            //bcrypt
             bcrypt.compare(req.body.password, result[0].password, (error, valid) => {
                 if (valid) {
                     // jsonwebtoken
                     const token = jwt.sign(
-                        {userId: result.testID},
+                        {userId: result[0].testID},
                         'RANDOM_TOKEN_SECRET',
                         {expiresIn: '24h'});
-                        console.log(result.email);
+                        //localStorage.setItem('token', token);
+                        //console.log(localStorage.getItem('token') );
                         return res.status(200).json({
-                            userId: result.testID,
+                            userId: result[0].testID,
                             token: token
                         });
                     //
@@ -96,8 +97,22 @@ app.post(`/login`, async (req, res, next) => {
         });
     }
 });
-    
 
-
-
+app.get(`/auth`, (req, res, next) => {
+    try {
+      const token = req.headers.authorization.split(' ')[1];
+      const decodedToken = jwt.verify(token, 'RANDOM_TOKEN_SECRET');
+      const userId = decodedToken.testId;
+      if (req.body.testId && req.body.testId !== userId) {
+        throw 'Invalid user ID';
+      } else {
+        next();
+      }
+    } catch {
+          res.status(401).json({
+        error: new Error('Invalid request')
+      });
+    }
+}); 
+*/
 module.exports = app;

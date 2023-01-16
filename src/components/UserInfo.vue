@@ -1,5 +1,5 @@
 <template>
-    <h4>{{ userInfo[0].firstName }} {{ userInfo[0].lastName }}</h4> <p>{{ userInfo[0].jobPosition }}</p> 
+    <h4>{{ userInfo[0].firstName }} {{ userInfo[0].lastName }}</h4> <p>{{ userInfo[0].email }}</p> 
 </template>
 
 <script>
@@ -20,7 +20,7 @@ export default {
     methods: {
         async fetchUserInfo() {
     //        let id =  req.params.id
-        const res = await fetch(`http://localhost:3000/userInfo/1`)
+        const res = await fetch(`http://localhost:3000/userInfo/7`)
         const data = await res.json()
         return data
       },
