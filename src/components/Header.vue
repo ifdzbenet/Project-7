@@ -49,7 +49,8 @@ import UserInfo from './UserInfo.vue'
 <style scoped>
 
 header{
-    position: relative;
+  position: relative;
+  box-shadow: 2px 2px 20px #eeddbd85;
 }
 
 header div {

@@ -69,6 +69,15 @@ exports.login = async (req, res, next) => {
     }
 };
 
+exports.userinfoall = async (req, res, next) => {
+    database.query(`SELECT userID, firstName, lastName, jobPosition, profilePicture, email, is_logged, sign_up_date, log_in_date FROM user_info WHERE 1`, (err, result, fields) => {
+    if(err) {
+        return console.log(err);
+    }
+    return res.status(200).send(result)
+    })   
+};
+
 exports.userinfo = async (req, res, next) => {
     let id =  req.params.id
     database.query(`SELECT * FROM user_info WHERE userID LIKE ${id};`, (err, result, fields) => {
@@ -80,3 +89,4 @@ exports.userinfo = async (req, res, next) => {
     return res.status(200).send(result)
     })   
 };
+
