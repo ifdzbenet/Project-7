@@ -1,7 +1,7 @@
 <template>
     <header>
         <div>
-            <a id="logo-block" href="">
+            <a id="logo-block" @click="toHome()">
                 <img src="../assets/logos/icon-left-font.png">
             </a>
             <form id="search-bar">
@@ -40,6 +40,9 @@ import UserInfo from './UserInfo.vue'
       toggleDropDown() {
         this.showDropDown = !this.showDropDown
       },
+      toHome() {
+        window.location = `http://localhost:8080/`;
+      }
     },
         
   }

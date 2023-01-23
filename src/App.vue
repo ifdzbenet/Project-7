@@ -31,8 +31,9 @@ export default {
   src: url(./assets/fonts/static/OpenSans/OpenSans-Italic.ttf);
 }
   body {
+    height: 100%;
     margin: 0;
-    background-color: #FFF7E8;
+    background-color: white;
     align-items: center;
     font-size: 1em;
     font-family: Sans-Regular;

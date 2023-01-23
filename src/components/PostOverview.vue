@@ -2,20 +2,20 @@
     <section id="container">
       <div id="content">
         <div class="post-general" v-for="post in postInfo" :key="post">
-          <div class="user-info" v-for="user in userInfo" :key="user" v-show="user.userID == post.userID">
-            <span><img src="../assets/placeholder-user-icon.svg">{{user.firstName}} <p>{{user.jobPosition}}</p></span>
+          <div class="user-info">
+            <span><img src="../assets/placeholder-user-icon.svg">{{post.firstName}} <p>{{post.jobPosition}}</p></span>
           </div>
-          <div class="post-title">{{ post.title }}</div>
-          <div class="post-body-preview"><p>{{ post.body }}</p></div>
-          <div class="post-image"><img src="../assets/backgrounds/logo_design_random.png"></div>
-          <div class="topic">Topic: <a href="#">Chaos at the office</a>
-            <button v-if="!isFollowed" @click="toggleFollowTopicStatus()"><img src="../assets/circle-plus-solid.svg"></button>
-            <button v-if="isFollowed" @click="toggleFollowTopicStatus()"><img src="../assets/circle-check-solid.svg"></button>
-                <p v-if="isFollowed">Now following Chaos at the office!</p>
+          <a @click="linkToPost(post.postID)">
+            <div class="post-title">{{ post.title }}</div>
+            <div class="post-body-preview"><p>{{ post.body }}</p></div>
+          </a>
+          <a class="post-image" @click="linkToPost(post.postID)"><img src="../assets/backgrounds/logo_design_random.png"></a>
+          <div class="topic">Topic: <a href="#"> {{ post.topicName }}</a>
+            <button v-if="this.userPostInfo[0].followed_topics.split(',').includes(`${post.topicID}`)" ><img src="../assets/circle-check-solid.svg"></button>
           </div>
           <div class="read-status">
-            <p v-if="!isRead"><img src="../assets/bookmark-solid.svg">Unread</p>
-            <p v-if="isRead"><img src="../assets/bookmark-regular.svg">Read</p>
+            <p v-if="!this.userPostInfo[0].read_status.split(',').includes(`${post.postID}`)"><img src="../assets/bookmark-solid.svg">Unread</p>
+            <p v-else><img src="../assets/bookmark-regular.svg">Read</p>
             </div>
         </div>
       </div>
@@ -23,6 +23,8 @@
 </template>
 
 <script>
+import VueJwtDecode from 'vue-jwt-decode';
+import axios from 'axios'
   export default {
     name: 'PostOverview',
     components: {
@@ -32,36 +34,94 @@
       return {
         isRead: false,
         isFollowed: false,
-        IDs: false,
+        newFollowed: false,
         postInfo: [{ }],
-        userInfo: [{ }],
-        postUser: [{ }],
+        userPostInfo: [{ }],
       }
     },
     methods: {
-        async fetchPostInfo() {
-            const res = await fetch(`http://localhost:3000/post`)
-            const data = await res.json()
-            return data
-        },
-        async fetchUserInfo() {
-            const res = await fetch(`http://localhost:3000/userInfo`)
-            const data = await res.json()
-            return data
-        },
-        async userInPost(user, post) {
-            if (user.userID == post.userID) {
-                console.log('post');
-                this.IDs = !this.IDs
-            } else {
-                this.IDs = false
+      async fetchPostInfo() {
+          const res = await fetch(`http://localhost:3000/post`)
+          const data = await res.json()
+          return data
+      },
+
+      async fetchUserPostInfo() {
+        let decoded = '';
+            let token = localStorage.getItem('token');
+            try{
+                decoded = VueJwtDecode.decode(token)
             }
+            catch(err){
+                console.log('token is null: ',err);
+                window.location = "http://localhost:8080/auth";
+            }
+            let id = JSON.stringify(decoded.userId);
+        const res = await fetch(`http://localhost:3000/dynamic/userPostInfo/${id}`)
+        const data = await res.json()
+        return data
+      },
+
+      async test(topicID) {
+        let test = this.userPostInfo[0].followed_topics;
+        let length = test.length;
+        console.log(test)
+        console.log(length)
+        if (length > 1) {
+          if (!this.userPostInfo[0].followed_topics.split(',').includes(`${topicID}`)) {
+            return true
+          } else {
+            return false
+          }
+        } else {
+          if (!this.userPostInfo[0].followed_topics === topicID) {
+            return true
+          } else {
+            return false
+          }
         }
+      },
+      async linkToPost(id) {
+        let decoded = '';
+            let token = localStorage.getItem('token');
+            try{
+              decoded = VueJwtDecode.decode(token)
+            }
+            catch(err){
+              console.log('token is null: ',err);
+              window.location = "http://localhost:8080/auth";
+            }
+        let userid = JSON.stringify(decoded.userId);
+        let readPosts = this.userPostInfo[0].read_status.split(',');
+        if (!readPosts.includes(`${id}`)) {
+          readPosts.push(id)
+          let update = readPosts.toString()
+          let JSON = {"update": update}
+          this.userPostInfo.readPosts = readPosts
+          await axios.post(`http://localhost:3000/dynamic/sendReadStatus/${userid}`, JSON)
+            .catch(error => console.log(error))
+            window.location = `http://localhost:8080/post/${id}`;
+        } else {
+          console.log('its already there');
+            window.location = `http://localhost:8080/post/${id}`;
+        }
+      },
+      toggleFollowTopicStatus() {
+        /*
+        let followedTopics = this.userPostInfo[0].followed_topics.split(',').includes('1');
+        console.log(followedTopics)
+        
+        if (this.isFollowed === true) {
+          this.newFollowed = true
+        } else {
+          this.newFollowed = false
+        }*/
+      },
       
     },
     async created() {
+      this.userPostInfo = await this.fetchUserPostInfo()
       this.postInfo = await this.fetchPostInfo()
-      this.userInfo = await this.fetchUserInfo() 
     },
         
   }
@@ -70,7 +130,7 @@
 
 <style scoped>
  #container {
-    height: 50em;
+    height: auto;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -78,20 +138,17 @@
   }
 
   #content {
-    height: 100%;
-    width: 60%;
-    background-color: white;
+    height: auto;
+    width: 45%;
+    background-color: #FFF7E8;
     display: flex;
     flex-direction: column;
     align-items: center;
     padding-top: 2.5em;
-    background-image: url("../assets/backgrounds/logo_design_random.png");
-    background-repeat: no-repeat;
-    background-size: cover;
   }
 
   .post-general {
-    height: 40%;
+    height: 23em;
     width: 85%;
     margin-bottom: 1.5em;
     padding-left: 2.5em;
@@ -103,6 +160,11 @@
     position: relative;
     box-shadow: 2px 2px 20px #0000004a;
   }
+
+  .post-general a {
+    cursor:pointer; 
+  }
+
   .user-info {
     margin-top: 0.5em;
     height: 2em;

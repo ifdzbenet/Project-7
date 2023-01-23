@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import Authentification from '../views/Authentification.vue'
+import PostPage from '../views/SinglePostPage.vue'
 
 
 const routes = [
@@ -13,6 +14,11 @@ const routes = [
     path: '/auth',
     name: 'Authentification',
     component: Authentification
+  }, 
+  {
+    path: '/post/:id',
+    name: 'Post Page',
+    component: PostPage
   }
 ]
 

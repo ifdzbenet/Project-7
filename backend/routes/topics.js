@@ -3,16 +3,15 @@ const router = express.Router();
 
 // middleware to be used
 const auth = require('../middleware/auth');
-//const multer = require('../middleware/multer.config');
 
 
 // API calls
-const postCrtl = require('../controllers/post'); 
+const topicCrtl = require('../controllers/topics'); 
 
-router.get('/', postCrtl.getAllPosts);
-router.get('/:id', postCrtl.getOnePost);
+router.get('/', topicCrtl.getAllTopics);
 /*
 router.post('/', auth, multer, postCrtl.createPost);
+router.get('/:id', auth, postCrtl.getOnePost);
 router.put('/:id', auth, multer, postCrtl.modifyPost);
 router.delete('/:id', auth, postCrtl.deletePost);
 */

@@ -1,7 +1,6 @@
 <template>
     <Header />
-    
-      <PostOverview />
+    <PostOverview />
 
   </template>
   
