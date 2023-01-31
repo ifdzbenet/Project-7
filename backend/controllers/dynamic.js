@@ -20,7 +20,7 @@ exports.sendReadStatus = async (req, res, next) => {
         database.query(`UPDATE user_post_info SET read_status='${update}' WHERE userID='${id}'`)   
         //const read_status = req.body.readStatus;
         return res.status(200).send({
-            todo: 'ok'
+            its: 'ok'
         })
     } catch (error) {
         console.log(error);

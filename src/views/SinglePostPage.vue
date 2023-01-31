@@ -7,7 +7,7 @@
                     <span><img src="../assets/placeholder-user-icon.svg">{{post[0].firstName}} {{post[0].lastName}}<p>{{post[0].jobPosition}}</p></span>
                 </div>
                 <div class="post-title">{{ post[0].title }}</div>
-                <div class="post-image" @click="linkToPost(post[0].postID)"><img src="../assets/backgrounds/logo_design_random.png"></div>
+                <div class="post-image" @click="linkToPost(post[0].postID)"><img v-bind:src="require(`../assets/image/${post[0].image}`)"></div>
                 <div class="post-body"><p>{{ post[0].body }}</p></div>
                 <div>
                     <div class="topic">Topic: <a href="#"> {{ post[0].topicName }}</a></div>

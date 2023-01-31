@@ -28,4 +28,22 @@ exports.getOnePost = (req, res, next) => {
     })   
 };
 
-
+exports.createPost = async (req, res, next) => {
+    try{
+        const userID = req.body.userID;
+        const datePost = new Date().toISOString().slice(0, 19).replace('T', ' ');
+        const title = req.body.title;
+        const body = req.body.body;
+        const image = req.file.filename; // imageUrl: url + '/images/' + req.file.filename,
+        const topicID = req.body.topicID;
+        await database.query(`INSERT INTO post (userID, datePost, title, body, image, topicID) VALUES ('${userID}', '${datePost}', '${title}', '${body}', '${image}', '${topicID}');`);
+        return res.status(200).send('ok')   
+    }   catch {
+        (error) => {
+            console.log('no');
+            return res.status(400).json({
+                error: error
+            });
+        }
+    }
+};

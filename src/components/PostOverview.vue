@@ -9,7 +9,7 @@
             <div class="post-title">{{ post.title }}</div>
             <div class="post-body-preview"><p>{{ post.body }}</p></div>
           </a>
-          <a class="post-image" @click="linkToPost(post.postID)"><img src="../assets/backgrounds/logo_design_random.png"></a>
+          <a class="post-image" @click="linkToPost(post.postID)"><img v-bind:src="require(`../assets/image/${post.image}`)"></a>
           <div class="topic">Topic: <a href="#"> {{ post.topicName }}</a>
             <button v-if="this.userPostInfo[0].followed_topics.split(',').includes(`${post.topicID}`)" ><img src="../assets/circle-check-solid.svg"></button>
           </div>
@@ -139,7 +139,7 @@ import axios from 'axios'
 
   #content {
     height: auto;
-    width: 45%;
+    width: 55%;
     background-color: #FFF7E8;
     display: flex;
     flex-direction: column;

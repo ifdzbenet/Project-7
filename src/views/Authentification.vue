@@ -8,7 +8,7 @@
             </div>
             <div id="form-body">
                 <div id="form-sign-up" v-if="showSignUp">
-                    <form method="get" @submit.prevent="" novalidate="true">
+                    <form method="post" @submit.prevent="" novalidate="true">
                         <label for="firstName">First Name</label>
                         <input type="text" id="firstName" name="firstName" v-model="formData.firstName">
                         <div class="fake_hr"></div>
