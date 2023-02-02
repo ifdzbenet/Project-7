@@ -142,9 +142,10 @@ import axios from 'axios'
     width: 55%;
     background-color: #FFF7E8;
     display: flex;
-    flex-direction: column;
+    flex-direction: column-reverse;
     align-items: center;
     padding-top: 2.5em;
+    margin-top: 2.5em;
   }
 
   .post-general {

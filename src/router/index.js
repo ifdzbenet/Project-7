@@ -3,6 +3,7 @@ import HomeView from '../views/HomeView.vue'
 import Authentification from '../views/Authentification.vue'
 import PostPage from '../views/SinglePostPage.vue'
 import CreatePost from '../views/CreatePost.vue'
+import UpdatePost from '../views/UpdatePost.vue'
 
 
 const routes = [
@@ -25,6 +26,11 @@ const routes = [
     path: '/post/create-post',
     name: 'Create a post',
     component: CreatePost
+  },
+  {
+    path: '/post/update-post/:id',
+    name: 'Update a post',
+    component: UpdatePost
   }
 ]
 

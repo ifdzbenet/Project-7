@@ -4,23 +4,23 @@
         <div id="content">
             <form method="post" @submit.prevent="" novalidate="true" enctype="multipart/form-data">
                 <label for="title">Title</label>
-                    <input type="text" id="title" name="title" v-model="formData.title">
+                    <input type="text" id="title" name="title" v-model="formData[0].title">
                 
                 <label for="body">Body</label>
-                    <textarea type="text" id="body" name="body" v-model="formData.body"></textarea>
+                    <textarea type="text" id="body" name="body" v-model="formData[0].body"></textarea>
                
-                    <div id="fake-label"><p>Image</p> </div><img src="../assets/circle-check-solid.svg" v-if="this.file" id="imgOk">
-                    <label for="image" id="fake-input">Select file</label> 
+                    <div id="fake-label"><p>Image</p> </div><img src="../assets/circle-check-solid.svg" v-if="formData[0].image" id="imgOk">
+                    <label for="image" id="fake-input">Change file</label> 
                     <input type="file" id="image" name="image" @change="onFile($event)">
                     
                   
                 
                 <label for="topic">Topic</label>
-                    <select id="topic" name="topic" v-model="formData.topicID">
+                    <select id="topic" name="topic" v-model="formData[0].topicID">
                         <option v-for="topic in topicsInfo" :key="topic" v-bind:value="topic.topicID" > {{topic.topicName}}</option>
                     </select>
                
-                    <input type="submit" value="Submit" class="button" @click="postPost()" />
+                    <input type="submit" value="Update" class="button" @click="updatePost()" />
             </form>
             <div id="errormsg" v-if="postError">
                 <img src="../assets/circle-xmark-regular.svg"><p>Error: </p><p id="error"> {{ errormsg }}</p>
@@ -66,34 +66,44 @@
           return data
         },
 
-
-        async postPost() {
+        async fetchPostInfo() {
             let decoded = '';
             let token = localStorage.getItem('token');
             try{
-              decoded = VueJwtDecode.decode(token)
+                decoded = VueJwtDecode.decode(token)
             }
             catch(err){
-              console.log('token is null: ',err);
-              window.location = "http://localhost:8080/auth";
+                console.log('token is null: ',err);
+                window.location = "http://localhost:8080/auth";
             }
-        let userid = JSON.stringify(decoded.userId);
-        this.formData.userID = userid;
-        console.log(this.formData)
-            if (this.formData.userID && this.formData.title && this.formData.body && this.formData.image && this.formData.topic !== '') {
-                axios.post('http://localhost:3000/post', this.formData, {
+            let userID = JSON.stringify(decoded.userId);
+
+            let url =  window.location.pathname;
+            let id = url.split('/').pop();
+            const res = await fetch(`http://localhost:3000/post/${id}`)
+            const data = await res.json()
+            if (userID !== data[0].userID) {
+                window.location = "http://localhost:8080/";
+            } else {
+                return data
+            }
+            
+        },
+
+        async updatePost() {
+            let id = this.formData[0].postID;
+            console.log(this.formData)
+                axios.put(`http://localhost:3000/post/update/${id}`, this.formData[0], {
                     headers: { 'Content-Type': 'multipart/form-data'}})
                 .then(function(){console.log('ok')})
                 .then(function() {window.location = "http://localhost:8080/"; })
                 .catch(function(){console.log('nope')})
-            } else {
-                this.errormsg = 'One or more fields are not completed'
-                this.postError = true; 
-            }
         }
+
     },
     async created() {
       this.topicsInfo = await this.fetchTopicsInfo()
+      this.formData = await this.fetchPostInfo()
     },
   }
 </script>

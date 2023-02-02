@@ -47,3 +47,44 @@ exports.createPost = async (req, res, next) => {
         }
     }
 };
+
+exports.updatePost = async (req, res, next) => {
+    try{
+        let id =  req.params.id
+        const postID = req.body.postID;
+        const title = req.body.title;
+        const body = req.body.body;
+         // imageUrl: url + '/images/' + req.file.filename,
+        const topicID = req.body.topicID;
+        if (req.file) {
+            const image = req.file.filename;
+            await database.query(`UPDATE post SET title='${title}',body='${body}',image='${image}',topicID='${topicID}' WHERE postID ='${id}'`);
+            return res.status(200).send('ok')   
+        } else {
+            await database.query(`UPDATE post SET title='${title}',body='${body}',topicID='${topicID}' WHERE postID ='${postID}'`);
+            return res.status(200).send('ok')
+        } 
+    }   catch {
+        (error) => {
+            console.log('no');
+            return res.status(400).json({
+                error: error
+            });
+        }
+    }
+};
+
+exports.deletePost = async (req, res, next) => {
+    try {
+        let id =  req.params.id
+        await database.query(`DELETE FROM post WHERE postID ='${id}'`);
+        return res.status(200).send('post deleted') 
+    } catch {
+        (error) => {
+            console.log('no');
+            return res.status(400).json({
+                error: error
+            });
+        }
+    }
+}

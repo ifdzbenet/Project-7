@@ -52,7 +52,9 @@ import UserInfo from './UserInfo.vue'
 <style scoped>
 
 header{
-  position: relative;
+  width: 100%;
+  position: fixed;
+  z-index:1;
   box-shadow: 2px 2px 20px #eeddbd85;
 }
 
@@ -76,6 +78,7 @@ div {
   display: flex;
   flex-flow: row;
   align-items: center;
+  cursor:pointer; 
 }
 #logo-block img {
   width: 17.5em;

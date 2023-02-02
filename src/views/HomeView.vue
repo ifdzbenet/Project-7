@@ -30,6 +30,7 @@
 <style scoped>
 button {
   position: fixed;
+  cursor:pointer; 
   left: 3em;
   top: 7em;
   width: 15%;

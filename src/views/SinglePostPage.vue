@@ -9,9 +9,12 @@
                 <div class="post-title">{{ post[0].title }}</div>
                 <div class="post-image" @click="linkToPost(post[0].postID)"><img v-bind:src="require(`../assets/image/${post[0].image}`)"></div>
                 <div class="post-body"><p>{{ post[0].body }}</p></div>
-                <div>
-                    <div class="topic">Topic: <a href="#"> {{ post[0].topicName }}</a></div>
-
+                <div id="flex">
+                  <div class="topic">Topic: <a href="#"> {{ post[0].topicName }}</a></div>
+                  <div id="button-box">
+                  <button class="button update" v-if="userinpost" @click="goToUpdatePage()">Update post</button>
+                  <button class="button delete" v-if="userinpost" @click="deletePost()">Delete post</button>
+                </div>
                 </div>
             </div>
         </div>
@@ -21,47 +24,78 @@
 <script>
 import VueJwtDecode from 'vue-jwt-decode'
   import Header from '../components/Header.vue'
-  
+  import axios from 'axios'
+
   export default {
     name: 'PostPage',
     components: {
       Header,
     },
     data(){
-        return { 
-            post: [{ }],
-            userInPost: [{ }],
-        }
+      return { 
+        post: [{ }],
+        userPostInfo: [{ }],
+        userinpost: true,
+      }
     },
     methods: {
-        async fetchPostInfo() {
-            let url =  window.location.pathname;
-            let id = url.split('/').pop();
-            const res = await fetch(`http://localhost:3000/post/${id}`)
-            const data = await res.json()
-            return data
-        },
-        async fetchUserPostInfo() {
-            let decoded = '';
-                let token = localStorage.getItem('token');
-                try{
-                    decoded = VueJwtDecode.decode(token)
-                }
-                catch(err){
-                    console.log('token is null: ',err);
-                    window.location = "http://localhost:8080/auth";
-                }
-                let id = JSON.stringify(decoded.userId);
-            const res = await fetch(`http://localhost:3000/dynamic/userPostInfo/${id}`)
-            const data = await res.json()
-            return data
-        },
-      
+      async fetchPostInfo() {
+        let url =  window.location.pathname;
+        let id = url.split('/').pop();
+        const res = await fetch(`http://localhost:3000/post/${id}`)
+        const data = await res.json()
+        return data
+      },
+      async fetchUserPostInfo() {
+          let decoded = '';
+              let token = localStorage.getItem('token');
+              try{
+                decoded = VueJwtDecode.decode(token)
+              }
+              catch(err){
+                console.log('token is null: ',err);
+                window.location = "http://localhost:8080/auth";
+              }
+              let id = JSON.stringify(decoded.userId);
+          const res = await fetch(`http://localhost:3000/dynamic/userPostInfo/${id}`)
+          const data = await res.json()
+          return data
+      },
+      checkUserInPost() {
+        let decoded = '';
+        let token = localStorage.getItem('token');
+          try{
+            decoded = VueJwtDecode.decode(token)
+          }
+          catch(err){
+            window.location = "http://localhost:8080/auth";
+          }
+        let id = JSON.stringify(decoded.userId);
+        if ( id === this.post[0].userID) {
+          return true;
+        } else {
+          return false
+        }
+      },
+      goToUpdatePage() {
+        let id = this.post[0].postID;
+        window.location = `http://localhost:8080/post/update-post/${id}`
+      },
+
+      async deletePost() {
+        let id = this.post[0].postID;
+       axios.delete(`http://localhost:3000/post/${id}`)
+          .then(function(){console.log('ok')})
+          .then(function() {window.location = "http://localhost:8080/"; })
+          .catch(function(){console.log('nope')})
+      }
+
     },
 
     async created() {
         this.userPostInfo = await this.fetchUserPostInfo()
         this.post = await this.fetchPostInfo()
+        this.userinpost = checkUserInPost()
     },
   }
 </script>
@@ -81,7 +115,7 @@ import VueJwtDecode from 'vue-jwt-decode'
     display: flex;
     flex-flow: column;
     align-items: center;
-    padding-top: 2.5em;
+    padding-top: 5em;
   }
 
   .post-general {
@@ -193,5 +227,37 @@ import VueJwtDecode from 'vue-jwt-decode'
     color: #FD2D01;
     background-color:#ffefd2;
   }
+
+  #button-box {
+    width: 50%;
+  }
+
+  .button {
+    width: 40%;
+    height: 2.5em;
+    border-style: none;
+    padding: 0;
+    margin: 0 2em 0 0;
+    border-radius: 10px;
+    font-family: Sans-Bold;
+    cursor:pointer; 
+}
+
+.update {
+  background-color: #FD2D01;
+  color: white;
+}
+
+.delete {
+  background-color: #FFD7D7;
+  color: #FD2D01;
+}
+
+#flex {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
+
 </style>
 

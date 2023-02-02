@@ -12,10 +12,8 @@ const postCrtl = require('../controllers/post');
 router.get('/', postCrtl.getAllPosts);
 router.get('/:id', postCrtl.getOnePost);
 router.post('/', multer, postCrtl.createPost);
-/*
-router.post('/', auth, multer, postCrtl.createPost);
-router.put('/:id', auth, multer, postCrtl.modifyPost);
-router.delete('/:id', auth, postCrtl.deletePost);
-*/
+router.put('/update/:id', multer, postCrtl.updatePost);
+router.delete('/:id', postCrtl.deletePost);
+
 
 module.exports = router;
