@@ -1,4 +1,5 @@
 <template>
+    <Header />
     <section id="container">
       <div id="content">
         <div class="post-general" v-for="post in postInfo" :key="post">
@@ -10,7 +11,7 @@
             <div class="post-body-preview"><p>{{ post.body }}</p></div>
           </a>
           <a class="post-image" @click="linkToPost(post.postID)"><img v-bind:src="require(`../assets/image/${post.image}`)"></a>
-          <div class="topic">Topic: <a @click="linkToTopicPage(post.topicID)"> {{ post.topicName }}</a></div>
+          <div class="topic">Topic: <a  @click="linkToTopicPage(post.topicID)"> {{ post.topicName }}</a></div>
           <div class="read-status">
             <p v-if="!this.userPostInfo[0].read_status.split(',').includes(`${post.postID}`)"><img src="../assets/bookmark-solid.svg">Unread</p>
             <p v-else><img src="../assets/bookmark-regular.svg">Read</p>
@@ -21,12 +22,14 @@
 </template>
 
 <script>
-import VueJwtDecode from 'vue-jwt-decode';
+import VueJwtDecode from 'vue-jwt-decode'
+import Header from '../components/Header.vue'
 import axios from 'axios'
+
   export default {
-    name: 'PostOverview',
+    name: 'TopicPage',
     components: {
-     
+     Header,
     },
     data() {
       return {
@@ -39,7 +42,9 @@ import axios from 'axios'
     },
     methods: {
       async fetchPostInfo() {
-          const res = await fetch(`http://localhost:3000/post`)
+        let url =  window.location.pathname;
+        let id = url.split('/').pop();
+          const res = await fetch(`http://localhost:3000/topics/${id}`)
           const data = await res.json()
           return data
       },

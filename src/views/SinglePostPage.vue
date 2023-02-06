@@ -11,9 +11,17 @@
                 <div class="post-body"><p>{{ post[0].body }}</p></div>
                 <div id="flex">
                   <div class="topic">Topic: <a href="#"> {{ post[0].topicName }}</a></div>
-                  <div id="button-box">
-                  <button class="button update" v-if="userinpost" @click="goToUpdatePage()">Update post</button>
-                  <button class="button delete" v-if="userinpost" @click="deletePost()">Delete post</button>
+                  <div class="button-box">
+                  <button class="button update" v-if="post[0].userID == user[0].userID" @click="goToUpdatePage()">Update post</button>
+                  <button class="button delete" v-if="post[0].userID == user[0].userID" @click="promptDelete()">Delete post</button>
+                </div>
+                </div>
+            </div>
+            <div id="deletePrompt" v-if="deletePrompt">
+                <div id="delete-msg">Are you sure you want to delete this post?
+                  <div class="button-box">
+                  <button class="button delete" @click="deletePost()">Delete</button>
+                  <button class="button update" @click="promptDelete()">Cancel</button>
                 </div>
                 </div>
             </div>
@@ -34,8 +42,8 @@ import VueJwtDecode from 'vue-jwt-decode'
     data(){
       return { 
         post: [{ }],
-        userPostInfo: [{ }],
-        userinpost: true,
+        user: [{}],
+        deletePrompt: false,
       }
     },
     methods: {
@@ -46,22 +54,7 @@ import VueJwtDecode from 'vue-jwt-decode'
         const data = await res.json()
         return data
       },
-      async fetchUserPostInfo() {
-          let decoded = '';
-              let token = localStorage.getItem('token');
-              try{
-                decoded = VueJwtDecode.decode(token)
-              }
-              catch(err){
-                console.log('token is null: ',err);
-                window.location = "http://localhost:8080/auth";
-              }
-              let id = JSON.stringify(decoded.userId);
-          const res = await fetch(`http://localhost:3000/dynamic/userPostInfo/${id}`)
-          const data = await res.json()
-          return data
-      },
-      checkUserInPost() {
+      async fetchUserInfo() {
         let decoded = '';
         let token = localStorage.getItem('token');
           try{
@@ -71,17 +64,17 @@ import VueJwtDecode from 'vue-jwt-decode'
             window.location = "http://localhost:8080/auth";
           }
         let id = JSON.stringify(decoded.userId);
-        if ( id === this.post[0].userID) {
-          return true;
-        } else {
-          return false
-        }
+        const res = await fetch(`http://localhost:3000/userInfo/${id}`)
+        const data = await res.json()
+        return data
       },
       goToUpdatePage() {
         let id = this.post[0].postID;
         window.location = `http://localhost:8080/post/update-post/${id}`
       },
-
+      promptDelete() {
+        this.deletePrompt = !this.deletePrompt
+      },
       async deletePost() {
         let id = this.post[0].postID;
        axios.delete(`http://localhost:3000/post/${id}`)
@@ -93,9 +86,8 @@ import VueJwtDecode from 'vue-jwt-decode'
     },
 
     async created() {
-        this.userPostInfo = await this.fetchUserPostInfo()
         this.post = await this.fetchPostInfo()
-        this.userinpost = checkUserInPost()
+        this.user = await this.fetchUserInfo()
     },
   }
 </script>
@@ -228,8 +220,10 @@ import VueJwtDecode from 'vue-jwt-decode'
     background-color:#ffefd2;
   }
 
-  #button-box {
-    width: 50%;
+  .button-box {
+    width: 60%;
+    display: flex;
+    flex-wrap: nowrap;
   }
 
   .button {
@@ -257,6 +251,35 @@ import VueJwtDecode from 'vue-jwt-decode'
   display: flex;
   width: 100%;
   justify-content: space-between;
+}
+
+#deletePrompt {
+  position: absolute;
+  z-index: 1;
+  top: 40%;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(128, 128, 128, 0.83);
+  border-radius: 50px;
+  width: 50%;
+  height: 40%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+#delete-msg {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  justify-content: space-evenly;
+  border-radius: 30px;
+  width: 55%;
+  height: 60%;
+  padding: 2em;
+  background-color: white;
 }
 
 </style>

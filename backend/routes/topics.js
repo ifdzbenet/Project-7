@@ -9,11 +9,6 @@ const auth = require('../middleware/auth');
 const topicCrtl = require('../controllers/topics'); 
 
 router.get('/', topicCrtl.getAllTopics);
-/*
-router.post('/', auth, multer, postCrtl.createPost);
-router.get('/:id', auth, postCrtl.getOnePost);
-router.put('/:id', auth, multer, postCrtl.modifyPost);
-router.delete('/:id', auth, postCrtl.deletePost);
-*/
+router.get('/:id', topicCrtl.getOneTopic);
 
 module.exports = router;
