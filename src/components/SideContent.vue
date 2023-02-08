@@ -1,5 +1,5 @@
 <template>
-    <div id="content">
+    <div id="content-box">
         <button @click="toCreatePost">Create a post</button>
         <ul id="topic-list" v-for="topic in topics" :key="topic">
             <li class="list"><a @click="linkToTopicPage(topic.topicID)">{{ topic.topicName }}</a></li>
@@ -57,7 +57,7 @@ export default {
 </script>
 
 <style scoped>
-#content {
+#content-box {
     position: fixed;
     left: 2em;
     top: 7em;

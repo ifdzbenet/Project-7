@@ -9,13 +9,7 @@ export default {
     data(){
         //fetch API for user info 
         return { 
-            userInfo: [{
-                userID: '',
-                firstName: '',
-                lastName: '',
-                jobPosition: '',
-                profilePicture: '',
-        }],
+            userInfo: [{}],
         }
     },
     methods: {

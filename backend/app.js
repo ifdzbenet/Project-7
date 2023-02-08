@@ -7,7 +7,6 @@ const database = require('./database');
 
 const userRoutes = require('./routes/user');
 const postRoutes = require('./routes/post');
-const dynamicRoutes = require('./routes/dynamic');
 const topicRoutes = require('./routes/topics');
 
 const app = express();
@@ -29,7 +28,6 @@ app.use('/images', express.static(path.join(__dirname, 'image')));
 // api endpoints for the paths
 app.use('/', userRoutes);
 app.use('/post', postRoutes);
-app.use('/dynamic', dynamicRoutes);
 app.use('/topics', topicRoutes);
 
 

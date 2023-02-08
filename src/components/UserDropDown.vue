@@ -1,9 +1,8 @@
 <template>
     <div id="drop-down">
-        <button  class="drop-down-option">Profile</button>
-        <button  class="drop-down-option">Favourite Posts</button>
-        <button  class="drop-down-option">Configuration</button>
-        <button @click="logOut()" class="drop-down-option">Log out</button>
+        <a @click="toProfile()" class="drop-down-option">Edit Profile</a>
+        <a  class="drop-down-option">Configuration</a>
+        <a @click="logOut()" class="drop-down-option">Log out</a>
     </div>
 </template>
 
@@ -15,6 +14,9 @@ export default {
             localStorage.removeItem('token')
             window.location = "http://localhost:8080/auth";
         },
+        toProfile() {
+            window.location = "http://localhost:8080/profile";
+        }
       
     },
 }
@@ -30,12 +32,14 @@ export default {
     display: flex;
     flex-flow: column;
     align-items: flex-start;
+
 }
 
 .drop-down-option {
+    cursor:pointer;  
     width: 100%;
     height: 1.5em;
-    padding-left: 0.3em;
+    padding-left: 1em;
     text-decoration: none;
     color: black;
     font-size: 0.9em;

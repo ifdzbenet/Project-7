@@ -91,3 +91,56 @@ exports.userinfo = async (req, res, next) => {
 };
 
 
+exports.getReadStatus = async (req, res, next) => {
+    let id =  req.params.id
+    database.query(`SELECT read_status FROM user_info WHERE userID LIKE ${id};`, (err, result, fields) => {
+    if(err) {
+        return console.log(err);
+    }
+    return res.status(200).send(result)
+    })   
+};
+
+exports.sendReadStatus = async (req, res, next) => {
+    try {
+        let id =  req.params.id
+        let update = req.body.update
+        database.query(`UPDATE user_info SET read_status='${update}' WHERE userID='${id}'`)   
+        //const read_status = req.body.readStatus;
+        return res.status(200).send({
+            its: 'ok'
+        })
+    } catch (error) {
+        console.log(error);
+        res.status(500).send('Something broke');
+    }
+};
+
+
+exports.updateProfile = async (req, res, next) => {
+    try{
+        let id =  req.params.id
+        const firstName = req.body.firstName;
+        const lastName = req.body.lastName;
+        const jobPosition = req.body.jobPosition;
+         // imageUrl: url + '/images/' + req.file.filename,
+        if (req.file) {
+            const profilePicture = req.file.profilePicture;
+            await database.query(`UPDATE user_info SET firstName='${firstName}', lastName='${lastName}', 
+            jobPosition='${jobPosition}', profilePicture='${profilePicture}' WHERE userID = '${id}'`);
+            return res.status(200).send('ok')   
+        } else {
+            const profilePicture = "placeholder-user-icon.svg";
+            await database.query(`UPDATE user_info SET firstName='${firstName}', lastName='${lastName}', 
+            jobPosition='${jobPosition}', profilePicture='${profilePicture}' WHERE userID = '${id}'`);
+            return res.status(200).send('ok')  
+        } 
+    }   catch {
+        (error) => {
+            console.log('no');
+            return res.status(400).json({
+                error: error
+            });
+        }
+    }
+};

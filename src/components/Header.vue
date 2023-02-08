@@ -16,7 +16,7 @@
                 <img id="arrow" src="../assets/chevron-down-solid.svg">
             </a>
         </div>
-        <UserDropDown v-show="showDropDown"/>
+        <UserDropDown v-if="showDropDown"/>
         </header>
 </template>
 
