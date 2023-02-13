@@ -4,7 +4,7 @@ const path = require('path');
 
 // middleware to be used
 const auth = require('../middleware/auth');
-const multer = require('../middleware/multer.config');
+const multer = require('../middleware/multer.post.config');
 
 // API calls
 const postCrtl = require('../controllers/post'); 

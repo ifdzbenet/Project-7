@@ -5,6 +5,7 @@ import PostPage from '../views/SinglePostPage.vue'
 import CreatePost from '../views/CreatePost.vue'
 import UpdatePost from '../views/UpdatePost.vue'
 import ChangeProfile from '../views/ChangeProfile.vue'
+import Configuration from '../views/Configuration.vue'
 
 
 const routes = [
@@ -37,6 +38,11 @@ const routes = [
     path: '/profile',
     name: 'Change Profile',
     component: ChangeProfile
+  },
+  {
+    path: '/configuration',
+    name: 'Configuration',
+    component: Configuration
   }
 ]
 

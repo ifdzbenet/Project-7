@@ -23,7 +23,8 @@ app.use((req, res, next) => {
 app.use(bodyParser.json());
 
 // upload pictures to the images folder through multer
-app.use('/images', express.static(path.join(__dirname, 'image')));
+app.use('/image', express.static(path.join(__dirname, '..', 'public')));
+
 
 // api endpoints for the paths
 app.use('/', userRoutes);

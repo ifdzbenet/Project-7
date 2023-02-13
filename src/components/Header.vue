@@ -8,12 +8,13 @@
                 <input type="text" placeholder="Search" name="search">
                 <button><img src='../assets/magnifying-glass-solid.svg' id="icon"></button>
             </form>
-            <a href="#" id="drop-down-user" @click="toggleDropDown()" >
-                <img id="user-icon" src="../assets/placeholder-user-icon.svg">
+            <a id="drop-down-user" @click="toggleDropDown()" >
+                <img id="user-icon" v-bind:src="`../image/${userInfo[0].profilePicture}`">
                 <div id="user-info">
-                  <UserInfo />
+                  <h4>{{ userInfo[0].firstName }} {{ userInfo[0].lastName }}</h4> <p>{{ userInfo[0].email }}</p>
                 </div>
-                <img id="arrow" src="../assets/chevron-down-solid.svg">
+                <img class="arrow" src="../assets/chevron-down-solid.svg"  v-if="!showDropDown">
+                <img class="arrow" src="../assets/chevron-up-solid.svg" v-if="showDropDown">
             </a>
         </div>
         <UserDropDown v-if="showDropDown"/>
@@ -23,6 +24,7 @@
 <script>
 import UserDropDown from './UserDropDown.vue'
 import UserInfo from './UserInfo.vue'
+import VueJwtDecode from 'vue-jwt-decode';
 
   export default {
     name: 'Header',
@@ -34,6 +36,7 @@ import UserInfo from './UserInfo.vue'
         return { 
           //Boolean to show the drop down
           showDropDown: false,
+          userInfo: [{}],
         }
     },
     methods: {
@@ -42,7 +45,25 @@ import UserInfo from './UserInfo.vue'
       },
       toHome() {
         window.location = `http://localhost:8080/`;
-      }
+      },
+      async fetchUserInfo() {
+            let decoded = '';
+            let token = localStorage.getItem('token');
+            try{
+                decoded = VueJwtDecode.decode(token)
+            }
+            catch(err){
+                console.log('token is null: ',err);
+                window.location = "http://localhost:8080/auth";
+            }
+            let id = JSON.stringify(decoded.userId);
+        const res = await fetch(`http://localhost:3000/userInfo/${id}`)
+        const data = await res.json()
+        return data
+      },
+    },
+    async created() {
+      this.userInfo = await this.fetchUserInfo()
     },
         
   }
@@ -50,6 +71,15 @@ import UserInfo from './UserInfo.vue'
 </script>
 
 <style scoped>
+h4 {
+    font-size: 1em;
+    margin: 0;
+}
+
+p {
+    font-size: 0.8em;
+    margin: 0;
+}
 
 header{
   width: 100%;
@@ -138,6 +168,7 @@ div {
   justify-content: space-between;
   text-decoration: none;
   color: #000;
+  cursor:pointer; 
 }
 #drop-down-user #user-icon {
   width: 2em;
@@ -156,7 +187,7 @@ div {
   align-items: flex-start;
 }
 
-#drop-down-user #arrow {
+#drop-down-user .arrow {
   width: 0.6em;
   height: 0.8em;
 }

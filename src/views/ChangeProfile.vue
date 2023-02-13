@@ -13,8 +13,8 @@
                     <input type="text" class="input" name="jobPosition" v-model="formData[0].jobPosition">
                
                     <div id="fake-label"><p>Profile picture</p> </div><img src="../assets/circle-check-solid.svg" v-if="this.formData[0].profilePicture" id="imgOk">
-                    <label for="image" id="fake-input">Change file</label> 
-                    <input type="file" id="image" name="image" @change="onFile($event)">
+                    <label for="profilePicture" id="fake-input">Change file</label> 
+                    <input type="file" id="profilePicture" name="profilePicture" @change="onFile($event)">
                
                     <input type="submit" value="Update" class="button" @click="updateProfile()" />
             </form>
@@ -50,9 +50,11 @@
         },
         methods: {
             onFile(event) {
+                console.log(this.formData[0])
             this.file = event.target.files[0];
-            this.formData.profilePicture = this.file;
-            console.log(this.formData.profilePicture)
+            this.formData[0].profilePicture = this.file;
+            console.log(this.formData[0].profilePicture)
+            console.log(this.formData[0])
         },
 
 
@@ -86,7 +88,7 @@
 
         async updateProfile() {
             let id = this.formData[0].userID;
-            console.log(this.formData)
+            console.log(this.formData[0])
                 axios.put(`http://localhost:3000/updateProfile/${id}`, this.formData[0], {
                     headers: { 'Content-Type': 'multipart/form-data'}})
                 .then(function(){console.log('ok')})

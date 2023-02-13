@@ -4,7 +4,7 @@
         <div class="content">
             <div class="post-general">
                 <div class="user-info">
-                    <span><img src="../assets/placeholder-user-icon.svg">{{post[0].firstName}} {{post[0].lastName}}<p>{{post[0].jobPosition}}</p></span>
+                    <span><img v-bind:src="`../image/${post[0].profilePicture}`">{{post[0].firstName}} {{post[0].lastName}}<p>{{post[0].jobPosition}}</p></span>
                 </div>
                 <div class="post-title">{{ post[0].title }}</div>
                 <div class="post-image" @click="linkToPost(post[0].postID)"><img v-bind:src="require(`../assets/image/${post[0].image}`)"></div>

@@ -2,7 +2,7 @@
   <div id="content-box">
         <button @click="toCreatePost">Create a post</button>
         <ul id="topic-list" v-for="topic in topics" :key="topic">
-            <li class="list"><a @click="filterChange(topic.topicID)">{{ topic.topicName }}</a></li>
+            <li class="list"><a class="topic-link" @click="filterChange(topic.topicID)">{{ topic.topicName }}</a></li>
         </ul>
         <div id="filter" v-if="resetFilter" a @click="setFilter()"> <a>Reset filters</a></div>
   </div>
@@ -11,13 +11,13 @@
         <ul id="test" v-for="post in postInfo" :key="post" v-show="this.filter.includes(`${post.topicID}`)">
         <li class="post-general" v-if="this.filter.includes(`${post.topicID}`)">
           <div class="user-info">
-            <span><img v-bind:src="require(`../assets/image/${post.profilePicture}`)">{{post.firstName}} <p>{{post.jobPosition}}</p></span>
+            <span><img v-bind:src="`../image/${post.profilePicture}`">{{post.firstName}} <p>{{post.jobPosition}}</p></span>
           </div>
           <a @click="linkToPost(post.postID)">
             <div class="post-title">{{ post.title }}</div>
             <div class="post-body-preview"><p>{{ post.body }}</p></div>
           </a>
-          <a class="post-image" @click="linkToPost(post.postID)"><img v-bind:src="require(`../assets/image/${post.image}`)"></a>
+          <a class="post-image" @click="linkToPost(post.postID)"><img v-bind:src="`image/${post.image}`"></a>
           <div class="topic">Topic: <a @click="linkToTopicPage(post.topicID)"> {{ post.topicName }}</a></div>
           <div class="read-status">
             <p v-if="!this.placeholder.includes(`${post.postID}`)"><img src="../assets/bookmark-solid.svg">Unread</p>
@@ -184,13 +184,13 @@ button {
     padding: 0.5em 0 0.5em 0;
 }
 
-a {
+.topic-link {
     padding: 0.3em 0.2em 0.3em 0.2em;
     border-radius: 10px;
     cursor:pointer; 
 }
 
-a:hover {
+.topic-link:hover {
     color: #FD2D01;
 }
  #container {
