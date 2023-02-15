@@ -15,6 +15,8 @@
                         <input type="text" class="input" name="email" v-model="email.email">
                     <label for="newEmail">New e-mail</label>
                         <input type="text" class="input" name="newEmail" v-model="email.newEmail">
+                    
+                        <input type="submit" value="Change e-mail" class="button" @click="changeEmail()" />
                 </form>
             </div>
             
@@ -31,8 +33,10 @@
                         <input type="password" class="input" name="password" v-model="password.password">
                    <label for="newPW">New password</label>
                         <input type="password" class="input" name="newPW" v-model="password.newPW">
-                    <label for="newPW">Repeat new password</label>
-                        <input type="password" class="input" name="newPW" v-model="password.newPW">
+                    <label for="repeatPW">Repeat new password</label>
+                        <input type="password" class="input" name="repeatPW" v-model="password.repeatPW">
+
+                        <input type="submit" value="Change password" class="button" @click="changePassword()" />
                 </form>
             </div>
             
@@ -49,9 +53,9 @@
                 </span>
             </div>
             <div id="deletePrompt" v-if="deletePrompt">
-                <div id="delete-msg">Are you sure you want to delete your account?
+                <div id="delete-msg">Are you sure you want to delete your account? Including all your posts and personal information
                   <div class="button-box">
-                  <button class="button cancel" @click="deletePost()">Delete</button>
+                  <button class="button cancel" @click="deleteUser()">Delete</button>
                   <button class="button delete" @click="promptDelete()">Cancel</button>
                 </div>
                 </div>
@@ -63,6 +67,9 @@
 
 <script>
 import Header from '../components/Header.vue'
+import VueJwtDecode from 'vue-jwt-decode';
+  import axios from 'axios'
+
 export default {
     name: 'Configuration',
     components: {
@@ -71,15 +78,16 @@ export default {
     data(){
       return { 
         email: {
+            userID: '',
             email: '',
             newEmail: ''
         },
         password: {
+            userID: '',
             password: '',
-            newPW: ''
+            newPW: '',
+            repeatPW: ''
         },
-        post: [{ }],
-        user: [{}],
         emailDropDown: false,
         passwordDropDown: false,
         deleteDropDown: false,
@@ -99,12 +107,56 @@ export default {
       promptDelete() {
         this.deletePrompt = !this.deletePrompt
       },
-      async deletePost() {
-        /*let id = this.post[0].postID;
-       axios.delete(`http://localhost:3000/post/${id}`)
-          .then(function(){console.log('ok')})
-          .then(function() {window.location = "http://localhost:8080/"; })
-          .catch(function(){console.log('nope')})*/
+      async deleteUser() {
+        let decoded = '';
+            let token = localStorage.getItem('token');
+            try{
+              decoded = VueJwtDecode.decode(token)
+            }
+            catch(err){
+              console.log('token is null: ',err);
+              window.location = "http://localhost:8080/auth";
+            }
+        let id = JSON.stringify(decoded.userId);
+       await axios.delete(`http://localhost:3000/deleteUser/${id}`)
+          .then(function() {window.location = "http://localhost:8080/auth"; })
+          .catch(function(){console.log('nope')})
+      },
+      async changeEmail() {
+        let decoded = '';
+            let token = localStorage.getItem('token');
+            try{
+              decoded = VueJwtDecode.decode(token)
+            }
+            catch(err){
+              console.log('token is null: ',err);
+              window.location = "http://localhost:8080/auth";
+            }
+        this.email.userID = JSON.stringify(decoded.userId);
+        axios.put(`http://localhost:3000/updateEmail`, this.email)
+            .then(function(){console.log('ok')})
+            .then(function() {window.location = "http://localhost:8080/"; })
+            .catch(function(){console.log('nope')})
+      },
+      async changePassword() {
+        let decoded = '';
+            let token = localStorage.getItem('token');
+            try{
+              decoded = VueJwtDecode.decode(token)
+            }
+            catch(err){
+              console.log('token is null: ',err);
+              window.location = "http://localhost:8080/auth";
+            }
+        this.password.userID = JSON.stringify(decoded.userId);
+        if (this.email.newPW == this.email.repeatPW) {
+        axios.put(`http://localhost:3000/updatePassword`, this.password)
+            .then(function(){console.log('ok')})
+            .then(function() {window.location = "http://localhost:8080/"; })
+            .catch(function(){console.log('nope')})
+        } else {
+            console.log('passwords dont match')
+        }
       }
     }
 }
@@ -157,7 +209,7 @@ export default {
 
 .dropdown {
     width: 50%;
-    height: 6em;
+    height: auto;
     background-color: white;
     
 }
@@ -167,12 +219,13 @@ export default {
     align-items: center;
     flex-direction: row;
     flex-wrap: wrap;
+    justify-content: space-around;
     padding: 0.5em;
 }
 
 label {
     margin: 0.3em;
-    width: 25%;
+    width: 30%;
     height: 1.5em;
     color: black;
     font-family: Sans-Bold;
@@ -180,10 +233,10 @@ label {
 }
 
 input {
-    width: 60%;
+    width: 50%;
     height: 1.5em;
     display: inline;
-    margin: 0.3em;
+    margin: 0.8em;
     border-style: none;
     outline: none;
     background: #FFC90E;
@@ -195,6 +248,7 @@ input {
 }
 
 #delete-container {
+    height: 7em;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -206,7 +260,7 @@ input {
 }
 
 .button {
-    width: 20%;
+    width: 40%;
     height: 2.5em;
     border-style: none;
     padding: 0;
@@ -257,7 +311,7 @@ input {
 }
 
 .button-box {
-width: 15em;
+width: 80%;
 display: flex;
 justify-content: space-evenly;
 }

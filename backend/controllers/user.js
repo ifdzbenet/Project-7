@@ -72,33 +72,21 @@ exports.login = async (req, res, next) => {
 exports.deleteUser = async (req, res, next) => {
     try {
         let id =  req.params.id
-        await database.query(`SELECT * FROM user_info WHERE userID LIKE '${id}'`, (err, result, fields) =>{
-            if(err) {
-                return console.log(err);
-            }
-            //bcrypt
-            bcrypt.compare(req.body.password, result[0].password, (error, valid) => {
-                if (valid) {
-                    database.query(`DELETE FROM user_info WHERE userID ='${id}'`);
-                } else if (error) { 
-                    return res.status(500).json({
-                        error: error
-                    });
-                }
-            });
-            //
-        })
+        await database.query(`DELETE FROM post WHERE userID ='${id}'`);
+        await database.query(`DELETE FROM user_info WHERE userID ='${id}'`);
+        return res.status(200).json({
+            ok: 'ok'});
     } catch (error) {
             console.log('the connection with the db is altered')
             return res.status(500).json({
-            error: error
+                error: error
         });
     }
 };
 
 exports.updateEmail = async (req, res, next) => {
     try {
-        let id =  req.params.id
+        let id =  req.body.userID
         let newEmail = req.body.newEmail
         await database.query(`SELECT email FROM user_info WHERE userID LIKE '${id}'`, (err, result, fields) =>{
             if(err) {
@@ -126,7 +114,7 @@ exports.updateEmail = async (req, res, next) => {
 
 exports.updatePassword = async (req, res, next) => {
     try {
-        let id =  req.params.id
+        let id =  req.body.userID
         let newPW = req.body.newPW
         await database.query(`SELECT password FROM user_info WHERE userID LIKE '${id}'`, (err, result, fields) =>{
             if(err) {

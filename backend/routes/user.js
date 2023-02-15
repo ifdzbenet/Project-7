@@ -9,7 +9,7 @@ const multer = require('../middleware/multer.user.config');
 //manipulation of fragile user info
 router.post('/signup', userCtrl.signup);
 router.post('/login', userCtrl.login);
-router.delete('/deleteUser', userCtrl.deleteUser);
+router.delete('/deleteUser/:id', userCtrl.deleteUser);
 router.put('/updateEmail', userCtrl.updateEmail);
 router.put('/updatePassword', userCtrl.updatePassword);
 

@@ -1,7 +1,7 @@
 <template>
     <div id="drop-down">
         <a @click="toProfile()" class="drop-down-option">Edit Profile</a>
-        <a  class="drop-down-option">Configuration</a>
+        <a @click="toConfiguration()" class="drop-down-option">Configuration</a>
         <a @click="logOut()" class="drop-down-option">Log out</a>
     </div>
 </template>
@@ -16,6 +16,9 @@ export default {
         },
         toProfile() {
             window.location = "http://localhost:8080/profile";
+        },
+        toConfiguration() {
+            window.location = "http://localhost:8080/configuration";
         }
       
     },
