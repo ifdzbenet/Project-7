@@ -190,9 +190,10 @@ button {
     cursor:pointer; 
 }
 
-.topic-link:hover {
+  .topic-link:hover {
     color: #FD2D01;
-}
+  }
+  
  #container {
     height: auto;
     display: flex;
@@ -364,4 +365,39 @@ button {
     margin: 0;
   }
 
+  @media only screen and (max-width: 800px) {
+    #content-box {
+      position: static;
+      padding: 3.5em 0 0.5em 0;
+      width: 100%;
+      font-size: 0.9em;
+      display: flex;
+      align-items: center;
+    }
+
+    button {
+      width: 70%;
+      height: 2em;
+    }
+
+    #topic-list {
+      font-size: 0.9em; 
+        margin: 0;
+        padding: 0;
+    }
+
+    #content {
+      width: 90%;
+      padding-top: 0;
+    }
+    .post-general {
+      width: 75%;
+    }
+    .post-title {
+      width: 85%;
+    }
+    .post-body-preview {
+      width: 85%;
+    }
+  }
 </style>

@@ -50,4 +50,10 @@ export default {
     border-width: 0.1em;
     border-color: #EBE8E8;
 }
+
+@media only screen and (max-width: 800px) {
+    #drop-down {
+    width: 40%;
+}
+}
 </style>

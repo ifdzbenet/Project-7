@@ -2,7 +2,7 @@
     <header>
         <div>
             <a id="logo-block" @click="toHome()">
-                <img src="../assets/logos/icon-left-font.png">
+                <div id="logo"></div>
             </a>
             <form id="search-bar">
                 <input type="text" placeholder="Search" name="search">
@@ -110,11 +110,13 @@ div {
   align-items: center;
   cursor:pointer; 
 }
-#logo-block img {
+#logo {
   width: 17.5em;
   height: 2.5em;
-  overflow: hidden;
-  object-fit: cover;
+  background-image: url("../assets/logos/icon-left-font.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 
@@ -177,6 +179,7 @@ div {
 }
 
 #drop-down-user #user-info {
+  display: block;
   width: auto;
   height: 2.5em;
   margin: 0 0.5em 0 0.5em;
@@ -190,6 +193,43 @@ div {
 #drop-down-user .arrow {
   width: 0.6em;
   height: 0.8em;
+}
+
+@media only screen and (max-width: 800px) {
+  
+  #logo-block {
+    width: 15%;
+  }
+
+  #logo {
+    margin-left: 0.5em;
+    width: 3.5em;
+    height: 3em;
+    background-image: url("../assets/logos/icon.png");
+    overflow: hidden;
+    object-fit: cover;
+  }
+
+  #search-bar {
+    width: 55%;
+  }
+
+  #drop-down-user{
+    width: 12%;
+    font-size: 0.9em;
+  }
+
+  #user-info {
+    visibility: hidden;
+    width: 1em;
+  }
+
+  #user-info h4{
+    width: 0;
+  }
+  #user-info p{
+    width: 0;
+  }
 }
 
 </style>

@@ -87,7 +87,7 @@ export default {
                 if (this.formData.email.match(this.validRegex)) {
                     axios.post('http://localhost:3000/signup', this.formData)
                     .then(response => localStorage.setItem('token', response.data.token))
-                    .then(function() {window.location = "http://localhost:8080/"; })
+                    .then(function() {window.location = "http://localhost:8080/profile"; })
                     .catch(error => console.log(error))
                 } else {
                     this.errormsg = 'Introduce a valid e-mail'
@@ -270,5 +270,14 @@ input {
     padding: 0.5em;
     filter: opacity(0.4) drop-shadow(0 0 0 #FD2D01);
 }
-
+@media only screen and (max-width: 800px) {
+    #container {
+        margin-top: 2em;
+        height: 35em;
+    }
+    #content {
+        height: 100%;
+        width: 90%;    
+    }
+}
 </style>

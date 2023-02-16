@@ -115,7 +115,7 @@
   #content {
     height: 100%;
     width: 55%;
-    background-image: url("../assets/backgrounds/logo_design_random.png");
+    background-image: url("../assets/backgrounds/welcome_design.png");
     background-repeat: no-repeat;
     background-size: cover;
     background-color: #FFF7E8;
@@ -258,5 +258,34 @@ img {
 
 #error {
     padding: 0 1em 0 1em;
+}
+
+@media only screen and (max-width: 800px) {
+    #content {
+        height: 100%;
+        width: 90%;
+    }
+    form {
+        width: 75%;
+        height: 33em;
+        padding: 1.5em;
+        justify-content: space-between;
+    }
+    #fake-label {
+        width: 20%;
+    }
+
+    #fake-input {
+        float: left;
+        width: 20%;
+        margin-right: 45%;
+    }
+    label {
+        width: 35%;
+    }
+    .input {
+        height: 2em;
+        width: 55%;
+    }
 }
 </style>

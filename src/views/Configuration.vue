@@ -120,6 +120,7 @@ export default {
         let id = JSON.stringify(decoded.userId);
        await axios.delete(`http://localhost:3000/deleteUser/${id}`)
           .then(function() {window.location = "http://localhost:8080/auth"; })
+          .then(function() {localStorage.removeItem('token')})
           .catch(function(){console.log('nope')})
       },
       async changeEmail() {
@@ -314,6 +315,26 @@ input {
 width: 80%;
 display: flex;
 justify-content: space-evenly;
+}
+
+@media only screen and (max-width: 800px) {
+  .content {
+      height: 100%;
+      width: 90%;
+      font-size: 0.9em;
+  }
+  .dropdown-button {
+      width: 90%;
+  }
+  .dropdown {
+      width: 90%;
+  }
+  #deletePrompt {
+    top: 40%;
+    left: 50%;
+    width: 90%;
+    height: 60%;
+  }
 }
 
 </style>

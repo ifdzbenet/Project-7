@@ -279,4 +279,32 @@ img {
 #error {
     padding: 0 1em 0 1em;
 }
+
+@media only screen and (max-width: 800px) {
+    #container {
+        height: 45em;
+    }
+
+    #content {
+        height: 85%;
+        width: 90%;
+        margin-top: 5em;
+    }
+
+    form {
+        width: 75%;
+        height: 30em;
+        padding: 1.5em;
+    }
+
+    #fake-label {
+        width: 20%;
+    }
+
+    #fake-input {
+        float: left;
+        width: 20%;
+        margin-right: 45%;
+    }
+}
 </style>

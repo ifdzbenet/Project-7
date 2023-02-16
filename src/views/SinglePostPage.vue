@@ -181,6 +181,7 @@ import VueJwtDecode from 'vue-jwt-decode'
   }
 
  .topic {
+    width: 50%;
     height: 3em;
     font-size: 0.9em;
     margin: 0.2em 0 0.2em 0;
@@ -221,17 +222,18 @@ import VueJwtDecode from 'vue-jwt-decode'
   }
 
   .button-box {
-    width: 60%;
+    width: 80%;
     display: flex;
     flex-wrap: nowrap;
+    justify-content: flex-end;
   }
 
   .button {
     width: 40%;
     height: 2.5em;
     border-style: none;
-    padding: 0;
-    margin: 0 2em 0 0;
+    padding: 0 0.2em 0 0.2em;
+    margin: 0 0.5em 0 0;
     border-radius: 10px;
     font-family: Sans-Bold;
     cursor:pointer; 
@@ -280,6 +282,59 @@ import VueJwtDecode from 'vue-jwt-decode'
   height: 60%;
   padding: 2em;
   background-color: white;
+}
+
+@media only screen and (max-width: 800px) {
+  #container {
+    height: 100%;
+  }
+  .content {
+    height: 100%;
+    width: 90%;
+  }
+  .post-general {
+    height: auto;
+    width: 75%;
+    padding-left: 1.5em;
+  }
+  .post-title {
+    height: 2.5em;
+  }
+  .post-image {
+    margin-left: -1.5em;
+    width: 90%;
+    align-self: center;
+  }
+
+  #flex {
+    height: 6em;
+  display: flex;
+  flex-flow: column;
+  width: 100%;
+  justify-content: flex-start;
+}
+
+  .topic {
+    width: 15em;
+    height: 3em;
+ }
+
+ #button-box {
+  width: 80%;
+  height: 3em;
+ }
+ .button {
+    width: 15em;
+    height: 2.5em;
+  }
+
+  #deletePrompt {
+    top: 40%;
+    left: 50%;
+    width: 90%;
+    height: 60%;
+  }
+
 }
 
 </style>
