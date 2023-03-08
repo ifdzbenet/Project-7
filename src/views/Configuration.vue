@@ -165,7 +165,7 @@ export default {
 
 <style scoped>
 #container {
-    height: 100%;
+    height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;

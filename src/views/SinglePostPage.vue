@@ -7,7 +7,7 @@
                     <span><img v-bind:src="`../image/${post[0].profilePicture}`">{{post[0].firstName}} {{post[0].lastName}}<p>{{post[0].jobPosition}}</p></span>
                 </div>
                 <div class="post-title">{{ post[0].title }}</div>
-                <div class="post-image" @click="linkToPost(post[0].postID)"><img v-bind:src="require(`../assets/image/${post[0].image}`)"></div>
+                <div class="post-image"><img v-bind:src="`../image/${post[0].image}`"></div>
                 <div class="post-body"><p>{{ post[0].body }}</p></div>
                 <div id="flex">
                   <div class="topic">Topic: <a href="#"> {{ post[0].topicName }}</a></div>
@@ -94,7 +94,7 @@ import VueJwtDecode from 'vue-jwt-decode'
 
 <style scoped>
 #container {
-    height: 100%;
+    height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;

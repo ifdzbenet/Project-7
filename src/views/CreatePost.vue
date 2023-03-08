@@ -9,9 +9,12 @@
                 <label for="body">Body</label>
                     <textarea type="text" id="body" name="body" v-model="formData.body"></textarea>
                
-                    <div id="fake-label"><p>Image</p> </div><img src="../assets/circle-check-solid.svg" v-if="this.file" id="imgOk">
-                    <label for="image" id="fake-input">Select file</label> 
+                    <div id="fake-label" v-if="!this.multimedia"><p>Image</p> </div><img src="../assets/circle-check-solid.svg" v-if="this.file" id="imgOk">
+                    <label for="image" v-if="!this.multimedia" id="fake-input">Select file</label> 
                     <input type="file" id="image" name="image" @change="onFile($event)">
+                <button id="multimediatoggle" class="button" @click="toggleMM()">introduce multimedia</button>
+                <label for="multimedia" v-if="this.multimedia">Multimedia</label>
+                    <input type="text" id="multimedia" name="multimedia" v-model="formData.multimedia" v-if="this.multimedia">
                     
                   
                 
@@ -42,12 +45,8 @@
     data() {
       return {
         postError: false,
+        multimedia: false,
         formData: {
-            userID: '',
-            title: '',
-            body: '',
-            image: '',
-            topicID: ''
         },
         topicsInfo: [{ }],
         file: '',
@@ -57,6 +56,10 @@
         onFile(event) {
             this.file = event.target.files[0];
             this.formData.image = this.file;
+        },
+
+        toggleMM() {
+            this.multimedia = !this.multimedia
         },
 
 
@@ -135,7 +138,7 @@ form {
 }
 
 label {
-    width: 10%;
+    width: 15%;
     height: 1.5em;
     color: black;
     font-family: Sans-Bold;
@@ -170,13 +173,16 @@ textarea {
 }
 #title {
     height: 2em;
-    width: 87.5%;
+    width: 82.5%;
 }
 #body {
     height: 13em;
     padding: 1em;
 }
-
+#multimedia {
+    height: 2em;
+    width: 82.5%;
+}
 #image {
    display: none;
 }
@@ -198,7 +204,7 @@ textarea {
     float: left;
     width: 20%;
     margin-left: 0.5em;
-    margin-right: 56%;
+    margin-right: 40%;
     color: white;
     font-family: Sans-Bold;
     border: 0.3px solid white;

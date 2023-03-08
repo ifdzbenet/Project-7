@@ -280,4 +280,39 @@ input {
         width: 90%;    
     }
 }
+
+@media only screen and (min-width: 800px) {
+    #container {
+        margin-top: 0;
+        height: 100vh;
+    }
+    #content {
+        height: 100%;
+        width: 70%;
+        border-radius: 0%;
+        flex-direction: row-reverse; 
+        align-items: center;  
+        justify-content: center; 
+    }
+
+    #welcome-message {
+        width: 45%;
+        margin-left: -5em;;
+    }
+
+    #form-body {
+        width: 27em;
+        height: 20em;
+        display: flex;
+        justify-content: center;
+    }
+
+    #form-sign-up {
+        width: 100%;
+        height: 100%;
+    }
+    .fake_hr{
+        width: 80%;
+    }
+}
 </style>
