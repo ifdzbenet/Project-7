@@ -5,6 +5,7 @@
                 <h2>Welcome to the</h2>
                 <img src="../assets/logos/icon-left-font-monochrome-white.svg" alt="Groupomania"> 
                 <h1>Internal Social Network</h1>
+                <h2>Intranet</h2>
             </div>
             <div id="form-body">
                 <div id="form-sign-up" v-if="showSignUp">
@@ -154,7 +155,7 @@ p {
 
 #welcome-message {
     width: 100%;
-    height: 30%;
+    height: 50%;
     color: white;
     display: flex;
     flex-direction: column;

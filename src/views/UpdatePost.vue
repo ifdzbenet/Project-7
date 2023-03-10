@@ -3,23 +3,29 @@
     <section id="container">
         <div id="content">
             <form method="post" @submit.prevent="" novalidate="true" enctype="multipart/form-data">
-                <label for="title">Title</label>
+                <span class="order"><label for="title">Title</label>
                     <input type="text" id="title" name="title" v-model="formData[0].title">
-                
+                </span>
+                <span class="order">
                 <label for="body">Body</label>
                     <textarea type="text" id="body" name="body" v-model="formData[0].body"></textarea>
-               
+                </span>
+                <span class="order" v-if="showImage()">
                     <div id="fake-label"><p>Image</p> </div><img src="../assets/circle-check-solid.svg" v-if="formData[0].image" id="imgOk">
                     <label for="image" id="fake-input">Change file</label> 
                     <input type="file" id="image" name="image" @change="onFile($event)">
-                    
-                  
-                
+                </span>    
+                <span class="order" v-if="showMultimedia()">
+                <label for="multimedia" >Multimedia</label>
+                    <input type="text" id="multimedia" name="multimedia" v-model="formData[0].multimedia">
+                </span>
+                 
+                <span class="order">
                 <label for="topic">Topic</label>
                     <select id="topic" name="topic" v-model="formData[0].topicID">
                         <option v-for="topic in topicsInfo" :key="topic" v-bind:value="topic.topicID" > {{topic.topicName}}</option>
                     </select>
-               
+                </span>
                     <input type="submit" value="Update" class="button" @click="updatePost()" />
             </form>
             <div id="errormsg" v-if="postError">
@@ -42,11 +48,13 @@
     data() {
       return {
         postError: false,
+        multimedia: false,
         formData: {
             userID: '',
             title: '',
             body: '',
             image: '',
+            multimedia: '',
             topicID: ''
         },
         topicsInfo: [{ }],
@@ -58,7 +66,22 @@
             this.file = event.target.files[0];
             this.formData.image = this.file;
         },
+        showImage() {
+            if (this.formData[0].image !== '') {
+                return true;
+            } else {
+                return false;
+            }
 
+        },
+        showMultimedia() {
+            if (this.formData[0].image !== '') {
+                return false;
+            } else {
+                return true;
+            }
+
+        },
 
         async fetchTopicsInfo() {
           const res = await fetch(`http://localhost:3000/topics`)
@@ -144,8 +167,15 @@ form {
     border-radius: 20px;
 }
 
+.order {
+    width: 100%;
+    height: auto;
+    display: flex;
+    align-items: center;
+}
+
 label {
-    width: 10%;
+    width: 20%;
     height: 1.5em;
     color: black;
     font-family: Sans-Bold;
@@ -180,13 +210,16 @@ textarea {
 }
 #title {
     height: 2em;
-    width: 87.5%;
+    width: 100%;
 }
 #body {
     height: 13em;
     padding: 1em;
 }
-
+#multimedia {
+    height: 2em;
+    width: 82.5%;
+}
 #image {
    display: none;
 }
@@ -242,7 +275,7 @@ img {
 #topic {
     display: block;
     height: 2em;
-    width: 80%;
+    width: 100%;
     margin-left: 1em;
     cursor:pointer; 
 }

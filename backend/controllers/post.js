@@ -3,7 +3,7 @@ const database = require('../database');
 
 
 exports.getAllPosts = (req, res, next) => {
-    database.query(`SELECT postID, userID, datePost, title, body, image, topicID, comments, likes, favs, 
+    database.query(`SELECT postID, userID, datePost, title, body, image, multimedia, topicID, comments, likes, favs, 
     firstName, lastName, jobPosition, profilePicture, email, 
     topicName, amount_followers, added_date FROM post 
     LEFT JOIN user_info USING (userID) LEFT JOIN topics USING (topicID);`, (err, result, fields) => {
@@ -16,7 +16,7 @@ exports.getAllPosts = (req, res, next) => {
 
 exports.getOnePost = (req, res, next) => {
     let id =  req.params.id
-    database.query(`SELECT postID, userID, datePost, title, body, image, topicID, comments, likes, favs, 
+    database.query(`SELECT postID, userID, datePost, title, body, image, multimedia, topicID, comments, likes, favs, 
     firstName, lastName, jobPosition, profilePicture, email, 
     topicName, amount_followers, added_date FROM post 
     LEFT JOIN user_info USING (userID) LEFT JOIN topics USING (topicID)
@@ -29,44 +29,36 @@ exports.getOnePost = (req, res, next) => {
 };
 
 exports.createPost = async (req, res, next) => {
-    if (req.file.filename) {
-        try{
-            const userID = req.body.userID;
-            const datePost = new Date().toISOString().slice(0, 19).replace('T', ' ');
-            const title = req.body.title;
-            const body = req.body.body;
+    try{
+        const userID = req.body.userID;
+        const datePost = new Date().toISOString().slice(0, 19).replace('T', ' ');
+        const title = req.body.title;
+        const body = req.body.body;
+        //const image = req.file.filename; 
+        const multimedia = req.body.multimedia;
+        const topicID = req.body.topicID;
+        if (req.file) {
             const image = req.file.filename; // imageUrl: url + '/images/' + req.file.filename,
-            const topicID = req.body.topicID;
-            await database.query(`INSERT INTO post (userID, datePost, title, body, image, topicID) VALUES ('${userID}', '${datePost}', '${title}', '${body}', '${image}', '${topicID}');`);
+            await database.query(`INSERT INTO post (userID, datePost, title, body, image, multimedia, topicID) 
+            VALUES ('${userID}', '${datePost}', '${title}', '${body}', '${image}', '${multimedia}', '${topicID}');`);
             return res.status(200).send('ok')   
-        }   catch {
-            (error) => {
-                console.log('no');
-                return res.status(400).json({
-                    error: error
-                });
-            }
+        } else {
+            const image = req.body.image;
+            await database.query(`INSERT INTO post (userID, datePost, title, body, image, multimedia, topicID) 
+            VALUES ('${userID}', '${datePost}', '${title}', '${body}', '${image}', '${multimedia}', '${topicID}');`);
+            return res.status(200).send('ok')   
+        }
+        
+    }   catch {
+        (error) => {
+            console.log('no');
+            return res.status(400).json({
+                error: error
+            });
         }
     }
-    if (req.body.multimedia) {
-        try{
-            const userID = req.body.userID;
-            const datePost = new Date().toISOString().slice(0, 19).replace('T', ' ');
-            const title = req.body.title;
-            const body = req.body.body;
-            const multimedia = req.body.multimedia;
-            const topicID = req.body.topicID;
-            await database.query(`INSERT INTO post (userID, datePost, title, body, multimedia, topicID) VALUES ('${userID}', '${datePost}', '${title}', '${body}', '${multimedia}', '${topicID}');`);
-            return res.status(200).send('ok')   
-        }   catch {
-            (error) => {
-                console.log('no');
-                return res.status(400).json({
-                    error: error
-                });
-            }
-        }
-    }
+
+    
 };
 
 exports.updatePost = async (req, res, next) => {
@@ -75,6 +67,7 @@ exports.updatePost = async (req, res, next) => {
         const postID = req.body.postID;
         const title = req.body.title;
         const body = req.body.body;
+        const multimedia = req.body.multimedia;
          // imageUrl: url + '/images/' + req.file.filename,
         const topicID = req.body.topicID;
         if (req.file) {
@@ -82,7 +75,7 @@ exports.updatePost = async (req, res, next) => {
             await database.query(`UPDATE post SET title='${title}',body='${body}',image='${image}',topicID='${topicID}' WHERE postID ='${id}'`);
             return res.status(200).send('ok')   
         } else {
-            await database.query(`UPDATE post SET title='${title}',body='${body}',topicID='${topicID}' WHERE postID ='${postID}'`);
+            await database.query(`UPDATE post SET title='${title}',body='${body}', multimedia='${multimedia}', topicID='${topicID}' WHERE postID ='${postID}'`);
             return res.status(200).send('ok')
         } 
     }   catch {

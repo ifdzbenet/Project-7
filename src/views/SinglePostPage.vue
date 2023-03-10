@@ -7,7 +7,12 @@
                     <span><img v-bind:src="`../image/${post[0].profilePicture}`">{{post[0].firstName}} {{post[0].lastName}}<p>{{post[0].jobPosition}}</p></span>
                 </div>
                 <div class="post-title">{{ post[0].title }}</div>
-                <div class="post-image"><img v-bind:src="`../image/${post[0].image}`"></div>
+                <div class="post-image">
+                  <img v-if="post[0].image !== ''" v-bind:src="`../image/${post[0].image}`">
+                  <div class="iframe-container" v-if="post[0].image == ''">
+                    <iframe v-bind:src="`${embedURL(post[0].multimedia)}`" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                  </div>
+                </div>
                 <div class="post-body"><p>{{ post[0].body }}</p></div>
                 <div id="flex">
                   <div class="topic">Topic: <a href="#"> {{ post[0].topicName }}</a></div>
@@ -81,6 +86,12 @@ import VueJwtDecode from 'vue-jwt-decode'
           .then(function(){console.log('ok')})
           .then(function() {window.location = "http://localhost:8080/"; })
           .catch(function(){console.log('nope')})
+      },
+      embedURL(url) {
+        let splitUrl = url.split('/')
+        let middleSplit = splitUrl[3].split('=')
+        let videoCode = middleSplit[1].split('&')
+        return "https://www.youtube.com/embed/" + videoCode[0]
       }
 
     },
@@ -93,6 +104,17 @@ import VueJwtDecode from 'vue-jwt-decode'
 </script>
 
 <style scoped>
+.iframe-container {
+  position: relative;
+  width: 100%;
+  padding-bottom: 0%;
+  height: 20em;
+}
+.iframe-container iframe {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
 #container {
     height: 100vh;
     display: flex;

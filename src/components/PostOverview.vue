@@ -17,7 +17,12 @@
             <div class="post-title">{{ post.title }}</div>
             <div class="post-body-preview"><p>{{ post.body }}</p></div>
           </a>
-          <a class="post-image" @click="linkToPost(post.postID)"><img v-bind:src="`image/${post.image}`"></a>
+          <a class="post-image" @click="linkToPost(post.postID)">
+            <img v-if="post.image !== ''" v-bind:src="`image/${post.image}`">
+            <div class="iframe-container" v-if="post.image == ''">
+              <iframe v-bind:src="`${embedURL(post.multimedia)}`" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+            </div>
+          </a>
           <div class="topic">Topic: <a @click="linkToTopicPage(post.topicID)"> {{ post.topicName }}</a></div>
           <div class="read-status">
             <p v-if="!this.placeholder.includes(`${post.postID}`)"><img src="../assets/bookmark-solid.svg">Unread</p>
@@ -49,6 +54,7 @@ import axios from 'axios'
         topics: [{}],
         filter: [],
         resetFilter: false,
+        embed: ''
       }
     },
     methods: {
@@ -123,6 +129,13 @@ import axios from 'axios'
         this.filter = test.split('')
         this.resetFilter = false
       },
+
+      embedURL(url) {
+        let splitUrl = url.split('/')
+        let middleSplit = splitUrl[3].split('=')
+        let videoCode = middleSplit[1].split('&')
+        return "https://www.youtube.com/embed/" + videoCode[0]
+      }
     },
     async created() {
       this.userPostInfo = await this.fetchReadStatus()
@@ -131,12 +144,25 @@ import axios from 'axios'
       this.setFilter()
       this.splitArray()
     },
+   
         
   }
 
 </script>
 
 <style scoped>
+
+.iframe-container {
+  position: relative;
+  width: 100%;
+  padding-bottom: 0%;
+  height: 12em;
+}
+.iframe-container iframe {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
 
 #filter {
   display: flex;

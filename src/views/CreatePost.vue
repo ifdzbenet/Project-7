@@ -3,26 +3,31 @@
     <section id="container">
         <div id="content">
             <form method="post" @submit.prevent="" novalidate="true" enctype="multipart/form-data">
-                <label for="title">Title</label>
+                <span class="order"><label for="title">Title</label>
                     <input type="text" id="title" name="title" v-model="formData.title">
-                
+                </span>
+                <span class="order">
                 <label for="body">Body</label>
                     <textarea type="text" id="body" name="body" v-model="formData.body"></textarea>
-               
-                    <div id="fake-label" v-if="!this.multimedia"><p>Image</p> </div><img src="../assets/circle-check-solid.svg" v-if="this.file" id="imgOk">
-                    <label for="image" v-if="!this.multimedia" id="fake-input">Select file</label> 
+                </span>
+                <span class="order" v-if="!this.multimedia">
+                    <div id="fake-label" ><p>Image</p> </div><img src="../assets/circle-check-solid.svg" v-if="this.file" id="imgOk">
+                    <label for="image"  id="fake-input">Select file</label> 
                     <input type="file" id="image" name="image" @change="onFile($event)">
-                <button id="multimediatoggle" class="button" @click="toggleMM()">introduce multimedia</button>
+                </span>
+                <button id="multimediatoggle" v-if="!this.multimedia" class="button" @click="toggleMM()">Introduce multimedia</button>
+                <span class="order">
                 <label for="multimedia" v-if="this.multimedia">Multimedia</label>
                     <input type="text" id="multimedia" name="multimedia" v-model="formData.multimedia" v-if="this.multimedia">
-                    
+                </span>
+                <button id="multimediatoggle" v-if="this.multimedia" class="button" @click="toggleMM()">Introduce image</button>   
                   
-                
+                <span class="order">
                 <label for="topic">Topic</label>
                     <select id="topic" name="topic" v-model="formData.topicID">
                         <option v-for="topic in topicsInfo" :key="topic" v-bind:value="topic.topicID" > {{topic.topicName}}</option>
                     </select>
-               
+                </span>
                     <input type="submit" value="Submit" class="button" @click="postPost()" />
             </form>
             <div id="errormsg" v-if="postError">
@@ -47,6 +52,10 @@
         postError: false,
         multimedia: false,
         formData: {
+            userID: '',
+            title: '',
+            image: '',
+            multimedia: '',
         },
         topicsInfo: [{ }],
         file: '',
@@ -83,16 +92,31 @@
         let userid = JSON.stringify(decoded.userId);
         this.formData.userID = userid;
         console.log(this.formData)
-            if (this.formData.userID && this.formData.title && this.formData.body && this.formData.image && this.formData.topic !== '') {
-                axios.post('http://localhost:3000/post', this.formData, {
-                    headers: { 'Content-Type': 'multipart/form-data'}})
-                .then(function(){console.log('ok')})
-                .then(function() {window.location = "http://localhost:8080/"; })
-                .catch(function(){console.log('nope')})
-            } else {
-                this.errormsg = 'One or more fields are not completed'
-                this.postError = true; 
-            }
+            if (this.formData.image !== '') {
+                if (this.formData.userID && this.formData.title && this.formData.body && this.formData.image && this.formData.topic !== '') {
+                    this.formData.multimedia = '';
+                    axios.post('http://localhost:3000/post', this.formData, {
+                        headers: { 'Content-Type': 'multipart/form-data'}})
+                    .then(function(){console.log('ok')})
+                    .then(function() {window.location = "http://localhost:8080/"; })
+                    .catch(function(){console.log('nope')})
+                } else {
+                    this.errormsg = 'One or more fields are not complete'
+                    this.postError = true; 
+                }
+            } 
+            if (this.formData.image === '') {
+                if (this.formData.userID && this.formData.title && this.formData.body && this.formData.multimedia && this.formData.topic !== '') {
+                    this.formData.image = '';
+                    axios.post('http://localhost:3000/post', this.formData)
+                    .then(function(){console.log('ok')})
+                    .then(function() {window.location = "http://localhost:8080/"; })
+                    .catch(function(){console.log('nope')})
+                } else {
+                    this.errormsg = 'One or more fields are not complete'
+                    this.postError = true; 
+                }
+            } 
         }
     },
     async created() {
@@ -129,16 +153,22 @@ form {
     width: 80%;
     height: 30em;
     display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-items: baseline;
+    flex-direction: column;
+    justify-content: space-around;
     background-color: #FFD7D7;
     padding: 1.5em;
     border-radius: 20px;
 }
 
+.order {
+    width: 100%;
+    height: auto;
+    display: flex;
+    align-items: center;
+}
+
 label {
-    width: 15%;
+    width: 20%;
     height: 1.5em;
     color: black;
     font-family: Sans-Bold;
@@ -173,7 +203,7 @@ textarea {
 }
 #title {
     height: 2em;
-    width: 82.5%;
+    width: 100%;
 }
 #body {
     height: 13em;
@@ -238,14 +268,14 @@ img {
 #topic {
     display: block;
     height: 2em;
-    width: 80%;
+    width: 100%;
     margin-left: 1em;
     cursor:pointer; 
 }
 
 
 .button {
-    width: 20%;
+    width: 35%;
     height: 2.5em;
     border-style: none;
     padding: 0;
