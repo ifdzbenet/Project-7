@@ -15,9 +15,7 @@
       Header,
       PostOverview,
     },
-    data() {
-      
-    },
+    
   }
 </script>
 

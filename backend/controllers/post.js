@@ -67,15 +67,17 @@ exports.updatePost = async (req, res, next) => {
         const postID = req.body.postID;
         const title = req.body.title;
         const body = req.body.body;
-        const multimedia = req.body.multimedia;
          // imageUrl: url + '/images/' + req.file.filename,
         const topicID = req.body.topicID;
         if (req.file) {
             const image = req.file.filename;
-            await database.query(`UPDATE post SET title='${title}',body='${body}',image='${image}',topicID='${topicID}' WHERE postID ='${id}'`);
+            await database.query(`UPDATE post SET title='${title}',body='${body}',image='${image}',topicID='${topicID}'
+            WHERE postID ='${postID}'`);
             return res.status(200).send('ok')   
         } else {
-            await database.query(`UPDATE post SET title='${title}',body='${body}', multimedia='${multimedia}', topicID='${topicID}' WHERE postID ='${postID}'`);
+            const multimedia = req.body.multimedia;
+            await database.query(`UPDATE post SET title='${title}',body='${body}', multimedia='${multimedia}', topicID='${topicID}' 
+            WHERE postID ='${postID}'`);
             return res.status(200).send('ok')
         } 
     }   catch {

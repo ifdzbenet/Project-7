@@ -49,14 +49,14 @@
       return {
         postError: false,
         multimedia: false,
-        formData: {
+        formData: [{
             userID: '',
             title: '',
             body: '',
             image: '',
             multimedia: '',
             topicID: ''
-        },
+        }],
         topicsInfo: [{ }],
         file: '',
       }
@@ -64,7 +64,7 @@
     methods: {
         onFile(event) {
             this.file = event.target.files[0];
-            this.formData.image = this.file;
+            this.formData[0].image = this.file;
         },
         showImage() {
             if (this.formData[0].image !== '') {

@@ -45,17 +45,13 @@ import axios from 'axios'
     },
     data() {
       return {
-        isRead: false,
-        isFollowed: false,
-        newFollowed: false,
         postInfo: [{ }],
         userPostInfo: [{ }],
         placeholder: '',
         topics: [{}],
         filter: [],
         resetFilter: false,
-        embed: ''
-      }
+      };
     },
     methods: {
       async fetchPostInfo() {
