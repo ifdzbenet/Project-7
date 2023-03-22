@@ -4,11 +4,17 @@
         <div class="content">
             <div class="post-general">
                 <div class="user-info">
-                    <span><img v-bind:src="`../image/${post[0].profilePicture}`">{{post[0].firstName}} {{post[0].lastName}}<p>{{post[0].jobPosition}}</p></span>
+                    <span v-if="post[0].profilePicture !== undefined">
+                      <img v-bind:src="`../image/${post[0].profilePicture}`">{{post[0].firstName}} {{post[0].lastName}}<p>{{post[0].jobPosition}}</p>
+                    </span>
+                    <span v-if="post[0].profilePicture === undefined">
+                      <img src="../assets/placeholder-user-icon.svg">{{post[0].firstName}} {{post[0].lastName}}<p>{{post[0].jobPosition}}</p>
+                    </span>
                 </div>
                 <div class="post-title">{{ post[0].title }}</div>
                 <div class="post-image">
-                  <img v-if="post[0].image !== ''" v-bind:src="`../image/${post[0].image}`">
+                  <img v-if="post[0].image !== '' && post[0].image !== undefined" v-bind:src="`../image/${post[0].image}`">
+                  <img v-if="post[0].image !== '' && post[0].image === undefined" v-bind:src="`../image/placeholder-image.png`">
                   <div class="iframe-container" v-if="post[0].image == ''">
                     <iframe v-bind:src="`${embedURL(post[0].multimedia)}`" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
                   </div>

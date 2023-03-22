@@ -9,7 +9,8 @@
                 <button><img src='../assets/magnifying-glass-solid.svg' id="icon"></button>
             </form>
             <a id="drop-down-user" @click="toggleDropDown()" >
-                <img id="user-icon" v-bind:src="`../image/${userInfo[0].profilePicture}`">
+                <img id="user-icon" v-bind:src="`../image/${userInfo[0].profilePicture}`" v-if="userInfo[0].profilePicture !== undefined">
+                <img id="user-icon" src='../assets/placeholder-user-icon.svg' v-if="userInfo[0].profilePicture === undefined">
                 <div id="user-info">
                   <h4>{{ userInfo[0].firstName }} {{ userInfo[0].lastName }}</h4> <p>{{ userInfo[0].email }}</p>
                 </div>
@@ -45,6 +46,9 @@ import VueJwtDecode from 'vue-jwt-decode';
       },
       toHome() {
         window.location = `http://localhost:8080/`;
+      },
+      async undefined() {
+        
       },
       async fetchUserInfo() {
             let decoded = '';
