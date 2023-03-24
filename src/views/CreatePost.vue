@@ -10,17 +10,20 @@
                 <label for="body">Body</label>
                     <textarea type="text" id="body" name="body" v-model="formData.body"></textarea>
                 </span>
-                <span class="order" v-if="!this.multimedia">
-                    <div id="fake-label" ><p>Image</p> </div><img src="../assets/circle-check-solid.svg" v-if="this.file" id="imgOk">
-                    <label for="image"  id="fake-input">Select file</label> 
+                <span class="order">
+                    <div id="fake-label" >
+                        <input type="radio" class="radio" name="toggle" value="img" checked="checked" @change="toggleMM()"><label for="image">Image</label> 
+                    </div>
+                        <img src="../assets/circle-check-solid.svg" v-if="this.file" id="imgOk">
+                    <label for="image"  id="fake-input" v-if="!this.multimedia">Select file</label> 
                     <input type="file" id="image" name="image" @change="onFile($event)">
                 </span>
-                <button id="multimediatoggle" v-if="!this.multimedia" class="button" @click="toggleMM()">Introduce multimedia</button>
                 <span class="order">
-                <label for="multimedia" v-if="this.multimedia">Multimedia</label>
+                    <input type="radio" class="radio" name="toggle" value="multimedia"  @change="toggleMM()"> 
+                <label for="multimedia" >Multimedia</label>
+                    <p id="ytwarn">*Current version only allows for YouTube URLs</p>
                     <input type="text" id="multimedia" name="multimedia" v-model="formData.multimedia" v-if="this.multimedia">
                 </span>
-                <button id="multimediatoggle" v-if="this.multimedia" class="button" @click="toggleMM()">Introduce image</button>   
                   
                 <span class="order">
                 <label for="topic">Topic</label>
@@ -132,6 +135,16 @@
 </script>
 
 <style scoped>
+#ytwarn {
+    color: red;
+    font-size: 12px;
+}
+.radio {
+    width: 1em;
+    height: 1em;
+    margin-right: 0.5em;
+}
+
 #container {
     height: 45em;
     display: flex;
@@ -171,6 +184,7 @@ form {
     height: auto;
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
 }
 
 label {
@@ -217,14 +231,14 @@ textarea {
 }
 #multimedia {
     height: 2em;
-    width: 82.5%;
+    width: 100%;
 }
 #image {
    display: none;
 }
 
 #fake-label {
-    width: 10%;
+    width: 17%;
     display: inline;
     border-style: none;
     outline: none;
@@ -232,6 +246,7 @@ textarea {
     font-family: Sans-Bold;
     color: black;
     border-radius: 20px;
+    display: flex;
 }
 
 
@@ -243,7 +258,6 @@ textarea {
     margin-right: 40%;
     color: white;
     font-family: Sans-Bold;
-    border: 0.3px solid white;
     padding: .3em .6em;
     border-radius: 1em;
     background-color: #FD2D01;
@@ -323,13 +337,13 @@ img {
         padding: 1.5em;
     }
     #fake-label {
-        width: 20%;
+        width: 30%;
     }
 
     #fake-input {
         float: left;
         width: 20%;
-        margin-right: 45%;
+        margin-right: 30%;
     }
 }
 </style>

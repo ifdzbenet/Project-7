@@ -1,6 +1,7 @@
 <template>
     <Header />
     <section id="container">
+      <GoBack />
         <div class="content">
             <div class="post-general">
                 <div class="user-info">
@@ -43,12 +44,14 @@
 <script>
 import VueJwtDecode from 'vue-jwt-decode' //to decrypt the key from local storage
   import Header from '../components/Header.vue' 
+  import GoBack from '../components/GoBack.vue' 
   import axios from 'axios' // use of axios to do functions like POST, PUT, DELETE for the database
 
   export default {
     name: 'PostPage',
     components: {
       Header,
+      GoBack
     },
     data(){
       return { 
