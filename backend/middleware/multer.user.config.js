@@ -2,6 +2,7 @@ const multer = require('multer');
 const path = require('path');
 
 
+// Multer middleware to accept image files for the user info routes
 const storage = multer.diskStorage({
     destination:'../public/image',
     filename: (req, file, cb) => {

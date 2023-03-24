@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import VueJwtDecode from 'vue-jwt-decode';
+import VueJwtDecode from 'vue-jwt-decode'; //to decrypt the key from local storage
 export default {
     name: 'UserInfo',
     data(){
@@ -13,6 +13,7 @@ export default {
         }
     },
     methods: {
+        // fetch information about the logged user from the database
         async fetchUserInfo() {
             let decoded = '';
             let token = localStorage.getItem('token');
@@ -30,6 +31,7 @@ export default {
       },
       
     },
+    // Using the fetched data to set it into the data storage for use in creation of the page
     async created() {
       this.userInfo = await this.fetchUserInfo()
     },

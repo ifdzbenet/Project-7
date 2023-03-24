@@ -41,9 +41,9 @@
   </template>
   
 <script>
-import VueJwtDecode from 'vue-jwt-decode'
-  import Header from '../components/Header.vue'
-  import axios from 'axios'
+import VueJwtDecode from 'vue-jwt-decode' //to decrypt the key from local storage
+  import Header from '../components/Header.vue' 
+  import axios from 'axios' // use of axios to do functions like POST, PUT, DELETE for the database
 
   export default {
     name: 'PostPage',
@@ -52,12 +52,13 @@ import VueJwtDecode from 'vue-jwt-decode'
     },
     data(){
       return { 
-        post: [{ }],
-        user: [{}],
+        post: [{ }], //fetched information about the selected post (from the ID)
+        user: [{}], //fetched information about the user that created the post (from the ID)
         deletePrompt: false,
       }
     },
     methods: {
+      // fetching info from the database
       async fetchPostInfo() {
         let url =  window.location.pathname;
         let id = url.split('/').pop();
@@ -79,13 +80,17 @@ import VueJwtDecode from 'vue-jwt-decode'
         const data = await res.json()
         return data
       },
+      // function that redirects the user to the page where they can update the information of the post if they created it
       goToUpdatePage() {
         let id = this.post[0].postID;
         window.location = `http://localhost:8080/post/update-post/${id}`
       },
+      // function that prompts a message to make sure the user wants to delete the post if they created it
       promptDelete() {
         this.deletePrompt = !this.deletePrompt
       },
+
+      // function that sends the delete signal to the API
       async deletePost() {
         let id = this.post[0].postID;
        axios.delete(`http://localhost:3000/post/${id}`)
@@ -93,6 +98,8 @@ import VueJwtDecode from 'vue-jwt-decode'
           .then(function() {window.location = "http://localhost:8080/"; })
           .catch(function(){console.log('nope')})
       },
+
+      // function that takes the URL from the youtube video and embeds it into the page
       embedURL(url) {
         let splitUrl = url.split('/')
         let middleSplit = splitUrl[3].split('=')

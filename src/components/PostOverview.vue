@@ -36,7 +36,7 @@
 
 <script>
 import SideContent from '../components/SideContent.vue'
-import VueJwtDecode from 'vue-jwt-decode';
+import VueJwtDecode from 'vue-jwt-decode'; //to decrypt the key from local storage
 import axios from 'axios'
   export default {
     name: 'PostOverview',
@@ -45,12 +45,12 @@ import axios from 'axios'
     },
     data() {
       return {
-        postInfo: [{ }],
-        userPostInfo: [{ }],
-        placeholder: '',
-        topics: [{}],
-        filter: [],
-        resetFilter: false,
+        postInfo: [{ }], // fetched data from the table post from the database
+        userPostInfo: [{ }], // fetched data from the table user info from the database
+        placeholder: '', // placeholder objet to fill with information relevant for the read status functionality
+        topics: [{}], // fetched data from the table topics from the database
+        filter: [], // placeholder objet to fill with information relevant for the filter functionality
+        resetFilter: false, //Boolean to reset the filters
       };
     },
     methods: {
@@ -82,6 +82,7 @@ import axios from 'axios'
         return data
       },
 
+      // Function to redirect the user into the post that they are choosing to read
       async linkToPost(id) {
         let decoded = '';
             let token = localStorage.getItem('token');
@@ -107,25 +108,32 @@ import axios from 'axios'
             window.location = `http://localhost:8080/post/${id}`;
         }
       },
-      filterChange(id) {
-        this.filter = [`${id}`];
-        this.resetFilter = true
-      },
+
+      
       splitArray() {
         this.placeholder = this.userPostInfo[0].read_status.split(',')
       },
       toCreatePost() {
         window.location = `http://localhost:8080/post/create-post`;
       },
+      // Functions for the filter functionality
+        // changes the filter to only show the posts that match the selected topic
+      filterChange(id) {
+        this.filter = [`${id}`];
+        this.resetFilter = true
+      },
+        // shows the selection of topics available
       setFilter() {
-        let test = ''
-        for (let i = 0; i < 3; i++) {
-          test += this.topics[i].topicID + '';
+        let topicAddUp = ''
+        for (let i = 0; i < 7; i++) {
+          topicAddUp += this.topics[i].topicID + '';
         }
-        this.filter = test.split('')
+        this.filter = topicAddUp.split('')
         this.resetFilter = false
       },
 
+      // Youtube video URL embed functionality
+      // It takes the video code from a normal youtube URL to embed it into the post
       embedURL(url) {
         let splitUrl = url.split('/')
         let middleSplit = splitUrl[3].split('=')
@@ -133,6 +141,7 @@ import axios from 'axios'
         return "https://www.youtube.com/embed/" + videoCode[0]
       }
     },
+    // Using the fetched data to set it into the data storage for use in creation of the page
     async created() {
       this.userPostInfo = await this.fetchReadStatus()
       this.postInfo = await this.fetchPostInfo()

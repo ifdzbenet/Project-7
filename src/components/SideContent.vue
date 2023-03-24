@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import VueJwtDecode from 'vue-jwt-decode';
+import VueJwtDecode from 'vue-jwt-decode'; //to decrypt the key from local storage
 export default {
     name: 'SideContent',
     components: {
@@ -20,9 +20,12 @@ export default {
         }
     },
     methods: {
+      // Redirects the user into the page to create a new post
       toCreatePost() {
         window.location = `http://localhost:8080/post/create-post`;
         },
+
+      // fetches the information from the database
       async fetchTopicsInfo() {
           const res = await fetch(`http://localhost:3000/topics`)
           const data = await res.json()
@@ -43,11 +46,13 @@ export default {
         const data = await res.json()
         return data
       },
+      //not implemented for this version
       linkToTopicPage(id) {
         window.location = `http://localhost:8080/topic/${id}`;
       }
 
     },
+    // Using the fetched data to set it into the data storage for use in creation of the page
     async created() {
       this.topics = await this.fetchTopicsInfo()
       this.userPostInfo = await this.fetchUserPostInfo()

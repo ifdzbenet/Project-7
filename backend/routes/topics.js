@@ -1,10 +1,6 @@
 const express = require('express');
 const router = express.Router();
 
-// middleware to be used
-const auth = require('../middleware/auth');
-
-
 // API calls
 const topicCrtl = require('../controllers/topics'); 
 

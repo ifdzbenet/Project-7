@@ -67,8 +67,8 @@
 
 <script>
 import Header from '../components/Header.vue'
-import VueJwtDecode from 'vue-jwt-decode';
-  import axios from 'axios'
+import VueJwtDecode from 'vue-jwt-decode'; //to decrypt the key from local storage
+  import axios from 'axios' // use of axios to do functions like POST, PUT, DELETE for the database
 
 export default {
     name: 'Configuration',
@@ -77,24 +77,27 @@ export default {
     },
     data(){
       return { 
+        // necessary form fields for the change email functionality
         email: {
             userID: '',
             email: '',
             newEmail: ''
         },
+        // necessary form fields for the change email functionality
         password: {
             userID: '',
             password: '',
             newPW: '',
             repeatPW: ''
         },
-        emailDropDown: false,
-        passwordDropDown: false,
-        deleteDropDown: false,
-        deletePrompt: false,
+        emailDropDown: false, // toggle
+        passwordDropDown: false, // toggle
+        deleteDropDown: false, // toggle
+        deletePrompt: false, // prompt to make sure the user is sure to delete their account
       }
     },
     methods: {
+      // toggle functionality
       toggleEmailDropDown() {
         this.emailDropDown = !this.emailDropDown
       },
@@ -104,9 +107,13 @@ export default {
       toggleDeleteDropDown() {
         this.deleteDropDown = !this.deleteDropDown
       },
+
+      // prompt to make sure the user is sure to delete their account
       promptDelete() {
         this.deletePrompt = !this.deletePrompt
       },
+
+      // function to send the delete order (DELETE) to the API for deletion in the database
       async deleteUser() {
         let decoded = '';
             let token = localStorage.getItem('token');
@@ -123,6 +130,8 @@ export default {
           .then(function() {localStorage.removeItem('token')})
           .catch(function(){console.log('nope')})
       },
+
+      // function to change the email
       async changeEmail() {
         let decoded = '';
             let token = localStorage.getItem('token');
@@ -139,6 +148,8 @@ export default {
             .then(function() {window.location = "http://localhost:8080/"; })
             .catch(function(){console.log('nope')})
       },
+
+      // function to change the password
       async changePassword() {
         let decoded = '';
             let token = localStorage.getItem('token');

@@ -39,8 +39,8 @@
 
 <script>
   import Header from '../components/Header.vue'
-  import VueJwtDecode from 'vue-jwt-decode';
-  import axios from 'axios'
+  import VueJwtDecode from 'vue-jwt-decode'; //to decrypt the key from local storage
+  import axios from 'axios' // use of axios to do functions like POST, PUT, DELETE for the database
   
   export default {
     name: 'CreatePost',
@@ -49,36 +49,42 @@
     },
     data() {
       return {
-        postError: false,
-        multimedia: false,
+        postError: false, // error handling
+        multimedia: false, // video or picture handling
+        //form to be sent to the database
         formData: {
             userID: '',
             title: '',
             image: '',
             multimedia: '',
         },
+        // info about the topics to choose which one to place in the post
         topicsInfo: [{ }],
+        // needed for the image file functionality
         file: '',
       }
     },
     methods: {
+        // function to take the new file uploaded from the interface to be set in the form data
         onFile(event) {
             this.file = event.target.files[0];
             this.formData.image = this.file;
         },
 
+        // toggle between image and media input
         toggleMM() {
             this.multimedia = !this.multimedia
         },
 
-
+        //fectch infor from the database
         async fetchTopicsInfo() {
           const res = await fetch(`http://localhost:3000/topics`)
           const data = await res.json()
           return data
         },
 
-
+        // function to send the form into the APi to create the new post
+        //this function has an added functionality, where it does two different API calls depending on if there is an image file or not
         async postPost() {
             let decoded = '';
             let token = localStorage.getItem('token');

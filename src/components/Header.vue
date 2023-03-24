@@ -25,7 +25,7 @@
 <script>
 import UserDropDown from './UserDropDown.vue'
 import UserInfo from './UserInfo.vue'
-import VueJwtDecode from 'vue-jwt-decode';
+import VueJwtDecode from 'vue-jwt-decode'; //to decrypt the key from local storage
 
   export default {
     name: 'Header',
@@ -35,21 +35,19 @@ import VueJwtDecode from 'vue-jwt-decode';
     },
     data(){
         return { 
-          //Boolean to show the drop down
-          showDropDown: false,
-          userInfo: [{}],
+          showDropDown: false, //Boolean to show the drop down
+          userInfo: [{}], // fetched data from the table user info from the database
         }
     },
     methods: {
       toggleDropDown() {
         this.showDropDown = !this.showDropDown
       },
+
       toHome() {
         window.location = `http://localhost:8080/`;
       },
-      async undefined() {
-        
-      },
+      // Function to fetch the information from the database and make sure there is a logged user (local storage key)
       async fetchUserInfo() {
             let decoded = '';
             let token = localStorage.getItem('token');
@@ -66,6 +64,7 @@ import VueJwtDecode from 'vue-jwt-decode';
         return data
       },
     },
+    // Mount the information on creation of the page
     async created() {
       this.userInfo = await this.fetchUserInfo()
     },

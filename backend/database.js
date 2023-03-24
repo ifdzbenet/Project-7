@@ -7,4 +7,4 @@ module.exports = mysql.createConnection ({
     password: "laguzuaz",
     database: "groupomania",
     connectionLimit: 10,
-});;
+});

@@ -10,13 +10,17 @@
 export default {
     name: 'UserDropDown',
     methods: {
+        //function to log out, it removes the key from the local storage, and redirects the user to the authentification page
+        //there is no way for the user to be logged in afterwards
         logOut() {
             localStorage.removeItem('token')
             window.location = "http://localhost:8080/auth";
         },
+        // Redirects the user into the edit profile page
         toProfile() {
             window.location = "http://localhost:8080/profile";
         },
+        // Redirects the user into the configuration page
         toConfiguration() {
             window.location = "http://localhost:8080/configuration";
         }

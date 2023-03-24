@@ -26,9 +26,9 @@
 </template>
 
 <script>
-  import Header from '../components/Header.vue'
-  import VueJwtDecode from 'vue-jwt-decode';
-  import axios from 'axios'
+  import Header from '../components/Header.vue' 
+  import VueJwtDecode from 'vue-jwt-decode'; //to decrypt the key from local storage
+  import axios from 'axios' // use of axios to do functions like POST, PUT, DELETE for the database
 
     export default {
         name: 'ChangeProfile',
@@ -37,7 +37,9 @@
         },
         data() {
             return {
-                postError: false,
+                postError: false, // error handling
+
+                // form to change the data 
                 formData: [{
                     userID: '',
                     firstName: '',
@@ -45,10 +47,11 @@
                     jobPosition: '',
                     profilePicture: ''
                 }],
-                file: '',
+                file: '', // needed for the image file functionality
             }
         },
         methods: {
+            // function to take the new file uploaded from the interface to be set in the form data
             onFile(event) {
                 console.log(this.formData[0])
             this.file = event.target.files[0];
@@ -57,7 +60,7 @@
             console.log(this.formData[0])
         },
 
-
+        // fecthing information from the database
         async fetchTopicsInfo() {
           const res = await fetch(`http://localhost:3000/topics`)
           const data = await res.json()
@@ -86,6 +89,7 @@
             
         },
 
+        // function to send the new information to the database (PUT route)
         async updateProfile() {
             let id = this.formData[0].userID;
             console.log(this.formData[0])

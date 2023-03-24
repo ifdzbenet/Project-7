@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import axios from 'axios' // use of axios to do functions like POST, PUT, DELETE for the database
 export default {
     name: 'Authentification',
     components: {
@@ -55,15 +55,15 @@ export default {
     },
     data(){
         return { 
+          authError: false, // some error functionality if there are uncompleted fields
           //Boolean to toggle between sign up and log in
-          authError: false,
           showLogIn: true,
           showSignUp: false,
           //handling error in authentification
           errormsg: '',
           validRegex: /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
 
-          //welcomeMessage = true
+          // data to be sent to the DB for authentification of the user or creation of the user
           formData: {
             firstName: '',
             lastName: '',
@@ -73,6 +73,7 @@ export default {
         }
     },
     methods: {
+        // Toggle between log in and sign in interfaces
         turnLogIn() {
             this.showSignUp = false
             this.showLogIn = true
@@ -82,14 +83,17 @@ export default {
             this.showLogIn = false
         },
         
-
+        // function for the creation of a new user into the database
         async postSignUp() {
+            // only sending the information if the fields are completed
             if (this.formData.firstName && this.formData.lastName && this.formData.email && this.formData.password !== '') {
+                // only sending the information if the email has valid input
                 if (this.formData.email.match(this.validRegex)) {
                     axios.post('http://localhost:3000/signup', this.formData)
                     .then(response => localStorage.setItem('token', response.data.token))
-                    .then(function() {window.location = "http://localhost:8080/profile"; })
+                    .then(function() {window.location = "http://localhost:8080/profile"; }) 
                     .catch(error => console.log(error))
+                    // redirecting to the edition of profile page so they finish up their personal information
                 } else {
                     this.errormsg = 'Introduce a valid e-mail'
                     this.authError = true;
@@ -101,13 +105,18 @@ export default {
             
         },
 
+        // function for the authertification of the user in the database
+        // sends the information that will validate if the user exists in the database and give access to the main page if success
         async postLogin() {
             if (this.formData.email && this.formData.password !== '') {
-                if (this.formData.email.match(this.validRegex)) {
+                // only sending the information if the email has valid input
+                if (this.formData.email.match(this.validRegex)) { // only sending the information if the email has valid input
                     axios.post('http://localhost:3000/login', this.formData)
                     .then(response => localStorage.setItem('token', response.data.token))
                     .then(function() {window.location = "http://localhost:8080/"; })
                     .catch(error => console.log(error))
+                    // redirecting to the main page if successful
+
                 }  else {
                     this.errormsg = 'Introduce a valid e-mail'
                     this.authError = true;

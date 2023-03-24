@@ -2,6 +2,8 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const database = require('../database');
 
+
+// Route for the user to get access to the database, create an account
 exports.signup = async (req, res, next) => {
     try {
     const firstName = req.body.firstName;
@@ -9,9 +11,9 @@ exports.signup = async (req, res, next) => {
     const email = req.body.email;
     const password = req.body.password;
     const signUpDate = new Date().toISOString().slice(0, 19).replace('T', ' ');
-    const hash = await bcrypt.hash(password, 10);
+    const hash = await bcrypt.hash(password, 10); //hash to protect the user's password and save it instead of the real password
     await database.query(`INSERT INTO user_info (firstName, lastName, email, password, sign_up_date) VALUES ('${firstName}', '${lastName}', '${email}', '${hash}', '${signUpDate}');`);
-    //jsonwebtoken
+    //jsonwebtoken to set an identification key and set it in the local storage  to keep the session on
     await database.query(`SELECT * FROM user_info WHERE email LIKE '${req.body.email}'`, (err, result, fields) =>{
         const token = jwt.sign(
             {userId: result[0].userID},
@@ -27,6 +29,7 @@ exports.signup = async (req, res, next) => {
     }
 };
 
+// Route for the user to be able to log back in with their introduced credentials 
 exports.login = async (req, res, next) => {
     try {
         const email = req.body.email;
@@ -34,11 +37,11 @@ exports.login = async (req, res, next) => {
             if(err) {
                 return console.log(err);
             }
-            //bcrypt
+            //bcrypt to compare the existing hashed password in the database
             bcrypt.compare(req.body.password, result[0].password, (error, valid) => {
                 if (valid) {
                     
-                    // jsonwebtoken
+                    // jsonwebtoken to set an identification key and set it in the local storage to keep the session on
                     const token = jwt.sign(
                         {userId: result[0].userID},
                         '07061999tdis13022023',
@@ -55,6 +58,7 @@ exports.login = async (req, res, next) => {
                     });
                 }
             });
+            // A little piece of code to keep track of when the users are logging in
             const logInDate = new Date().toISOString().slice(0, 19).replace('T', ' ');
             database.query(`UPDATE user_info SET log_in_date ='${logInDate}';`);
 
@@ -62,28 +66,31 @@ exports.login = async (req, res, next) => {
             //
         })
     } catch (error) {
-            console.log('the connection with the db is altered')
+            console.log('the connection with the DB is altered')
             return res.status(500).json({
             error: error
         });
     }
 };
 
+// A route that allows the user to delete their account if desired. The interface has a prompt to make sure it's not a mistake
 exports.deleteUser = async (req, res, next) => {
     try {
         let id =  req.params.id
         await database.query(`DELETE FROM post WHERE userID ='${id}'`);
+        // Once the posts from the user are deleted, the user itself is removed from the database
         await database.query(`DELETE FROM user_info WHERE userID ='${id}'`);
         return res.status(200).json({
             ok: 'ok'});
     } catch (error) {
-            console.log('the connection with the db is altered')
+            console.log('the connection with the DB is altered')
             return res.status(500).json({
                 error: error
         });
     }
 };
 
+// A route where the user can access to change their email to log in
 exports.updateEmail = async (req, res, next) => {
     try {
         let id =  req.body.userID
@@ -112,6 +119,8 @@ exports.updateEmail = async (req, res, next) => {
     }
 };
 
+// A route where the user can change their password for their account. Everything gets re-hashed
+// The interface has a prompt where the user has to enter their former password to change to their new one
 exports.updatePassword = async (req, res, next) => {
     try {
         let id =  req.body.userID
@@ -142,6 +151,7 @@ exports.updatePassword = async (req, res, next) => {
     }
 };
 
+// A route to collect all the data from the user info table
 exports.userinfoall = async (req, res, next) => {
     database.query(`SELECT userID, firstName, lastName, jobPosition, profilePicture, email, is_logged, sign_up_date, log_in_date FROM user_info WHERE 1`, (err, result, fields) => {
     if(err) {
@@ -151,6 +161,7 @@ exports.userinfoall = async (req, res, next) => {
     })   
 };
 
+// Call to bring the information of a specific row (user) in the user info table
 exports.userinfo = async (req, res, next) => {
     let id =  req.params.id
     database.query(`SELECT * FROM user_info WHERE userID LIKE ${id};`, (err, result, fields) => {
@@ -163,7 +174,7 @@ exports.userinfo = async (req, res, next) => {
     })   
 };
 
-
+// A route to check if the logged user has read the post
 exports.getReadStatus = async (req, res, next) => {
     let id =  req.params.id
     database.query(`SELECT read_status FROM user_info WHERE userID LIKE ${id};`, (err, result, fields) => {
@@ -174,6 +185,8 @@ exports.getReadStatus = async (req, res, next) => {
     })   
 };
 
+// A route that updates when the user enters the link to a post that has not been read before
+// It sets the read status field into the former value, including a new addition to it
 exports.sendReadStatus = async (req, res, next) => {
     try {
         let id =  req.params.id
@@ -189,7 +202,8 @@ exports.sendReadStatus = async (req, res, next) => {
     }
 };
 
-
+// A route where the user can update their personal information like their name, job position and profile picture
+// This route is not the same as the password or email change routes
 exports.updateProfile = async (req, res, next) => {
     try{
         let id =  req.params.id

@@ -1,6 +1,7 @@
 
 const database = require('../database');
 
+// Call to get all the information from the table (topics)
 exports.getAllTopics = (req, res, next) => {
     database.query(`SELECT * FROM topics WHERE 1`, (err, result, fields) => {
     if(err) {
@@ -10,6 +11,7 @@ exports.getAllTopics = (req, res, next) => {
     })   
 };
 
+// Call to bring the information of a specific row inside the table
 exports.getOneTopic = (req, res, next) => {
     let id =  req.params.id
     database.query(`SELECT postID, userID, datePost, title, body, image, topicID, topicName, comments, likes, favs, 

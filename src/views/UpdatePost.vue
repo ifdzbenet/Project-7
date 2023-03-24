@@ -36,9 +36,9 @@
 </template>
 
 <script>
-  import Header from '../components/Header.vue'
-  import VueJwtDecode from 'vue-jwt-decode';
-  import axios from 'axios'
+  import Header from '../components/Header.vue' 
+  import VueJwtDecode from 'vue-jwt-decode'; //to decrypt the key from local storage
+  import axios from 'axios' // use of axios to do functions like POST, PUT, DELETE for the database
   
   export default {
     name: 'CreatePost',
@@ -47,8 +47,8 @@
     },
     data() {
       return {
-        postError: false,
-        multimedia: false,
+        postError: false, //error handling
+        multimedia: false, //toggle between the image button and the multimedia input
         formData: [{
             userID: '',
             title: '',
@@ -58,14 +58,17 @@
             topicID: ''
         }],
         topicsInfo: [{ }],
-        file: '',
+        file: '', // used to handle updating the file into the form data 
       }
     },
     methods: {
+        // function to take the new file uploaded from the interface to be set in the form data
         onFile(event) {
             this.file = event.target.files[0];
             this.formData[0].image = this.file;
         },
+
+        // functions to toggle the functionalities between uploading an image file and a URL input
         showImage() {
             if (this.formData[0].image !== '') {
                 return true;
@@ -83,6 +86,7 @@
 
         },
 
+        // fetching information from the database
         async fetchTopicsInfo() {
           const res = await fetch(`http://localhost:3000/topics`)
           const data = await res.json()
@@ -113,6 +117,7 @@
             
         },
 
+        // function that sends the changed information to the database to update it (PUT)
         async updatePost() {
             let id = this.formData[0].postID;
             console.log(this.formData)

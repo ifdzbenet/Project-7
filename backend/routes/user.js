@@ -1,7 +1,6 @@
 
 const express = require('express');
 const router = express.Router();
-const auth = require('../middleware/auth');
 
 const userCtrl = require('../controllers/user');
 const multer = require('../middleware/multer.user.config');
@@ -17,6 +16,8 @@ router.put('/updatePassword', userCtrl.updatePassword);
 router.get('/userInfo', userCtrl.userinfoall);
 router.get('/userInfo/:id', userCtrl.userinfo);
 router.get('/getReadStatus/:id', userCtrl.getReadStatus);
+
+// routes to update information
 router.post('/sendReadStatus/:id', userCtrl.sendReadStatus);
 router.put('/updateProfile/:id', multer, userCtrl.updateProfile);
 

@@ -3,7 +3,6 @@ const router = express.Router();
 const path = require('path');
 
 // middleware to be used
-const auth = require('../middleware/auth');
 const multer = require('../middleware/multer.post.config');
 
 // API calls

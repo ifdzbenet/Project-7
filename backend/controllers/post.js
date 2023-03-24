@@ -1,7 +1,7 @@
 
 const database = require('../database');
 
-
+// Call to bring all the information in the post table
 exports.getAllPosts = (req, res, next) => {
     database.query(`SELECT postID, userID, datePost, title, body, image, multimedia, topicID, comments, likes, favs, 
     firstName, lastName, jobPosition, profilePicture, email, 
@@ -14,6 +14,7 @@ exports.getAllPosts = (req, res, next) => {
     })   
 };
 
+// Call to bring the information of a specific row inside the table
 exports.getOnePost = (req, res, next) => {
     let id =  req.params.id
     database.query(`SELECT postID, userID, datePost, title, body, image, multimedia, topicID, comments, likes, favs, 
@@ -28,6 +29,7 @@ exports.getOnePost = (req, res, next) => {
     })   
 };
 
+// Create a new row (post) inside the post table
 exports.createPost = async (req, res, next) => {
     try{
         const userID = req.body.userID;
@@ -61,6 +63,8 @@ exports.createPost = async (req, res, next) => {
     
 };
 
+// Take one of the rows inside the post table and make changes over the information
+// Two routes: one brings a new file for the image field, the other accepts data without a new file (the image is not updated)
 exports.updatePost = async (req, res, next) => {
     try{
         let id =  req.params.id
@@ -90,6 +94,7 @@ exports.updatePost = async (req, res, next) => {
     }
 };
 
+// Query to delete one row of the post table. The frontend has a prompt for the user to be sure of its deletion
 exports.deletePost = async (req, res, next) => {
     try {
         let id =  req.params.id
