@@ -5,7 +5,7 @@
                 <div id="logo"></div>
             </a>
             <form id="search-bar">
-                <input type="text" placeholder="Search" name="search">
+                <input type="text" placeholder="Search" name="search" autocomplete="none">
                 <button><img src='../assets/magnifying-glass-solid.svg' id="icon"></button>
             </form>
             <a id="drop-down-user" @click="toggleDropDown()" >

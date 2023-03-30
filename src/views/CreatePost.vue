@@ -1,10 +1,11 @@
 <template>
     <Header />
     <section id="container">
+        <GoBack />
         <div id="content">
             <form method="post" @submit.prevent="" novalidate="true" enctype="multipart/form-data">
                 <span class="order"><label for="title">Title</label>
-                    <input type="text" id="title" name="title" v-model="formData.title">
+                    <input type="text" id="title" name="title" v-model="formData.title" autocomplete="none">
                 </span>
                 <span class="order">
                 <label for="body">Body</label>
@@ -16,13 +17,13 @@
                     </div>
                         <img src="../assets/circle-check-solid.svg" v-if="this.file" id="imgOk">
                     <label for="image"  id="fake-input" v-if="!this.multimedia">Select file</label> 
-                    <input type="file" id="image" name="image" @change="onFile($event)">
+                    <input type="file" id="image" name="image" @change="onFile($event)" autocomplete="none">
                 </span>
                 <span class="order">
                     <input type="radio" class="radio" name="toggle" value="multimedia"  @change="toggleMM()"> 
                 <label for="multimedia" >Multimedia</label>
                     <p id="ytwarn">*Current version only allows for YouTube URLs</p>
-                    <input type="text" id="multimedia" name="multimedia" v-model="formData.multimedia" v-if="this.multimedia">
+                    <input type="text" id="multimedia" name="multimedia" v-model="formData.multimedia" v-if="this.multimedia" autocomplete="none">
                 </span>
                   
                 <span class="order">
@@ -42,6 +43,7 @@
 
 <script>
   import Header from '../components/Header.vue'
+  import GoBack from '../components/GoBack.vue' 
   import VueJwtDecode from 'vue-jwt-decode'; //to decrypt the key from local storage
   import axios from 'axios' // use of axios to do functions like POST, PUT, DELETE for the database
   
@@ -49,6 +51,7 @@
     name: 'CreatePost',
     components: {
       Header,
+      GoBack
     },
     data() {
       return {

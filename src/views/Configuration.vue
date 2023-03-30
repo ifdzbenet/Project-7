@@ -1,6 +1,7 @@
 <template>
     <Header />
     <section id="container">
+      <GoBack />
         <div class="content">
             <a class="dropdown-button" @click="toggleEmailDropDown()">
                 <span class="selection-box">
@@ -12,9 +13,9 @@
             <div class="dropdown" v-if="emailDropDown">
                 <form method="post" @submit.prevent="" novalidate="true">
                     <label for="email">Current e-mail</label>
-                        <input type="text" class="input" name="email" v-model="email.email">
+                        <input type="text" class="input" name="email" v-model="email.email" autocomplete="none">
                     <label for="newEmail">New e-mail</label>
-                        <input type="text" class="input" name="newEmail" v-model="email.newEmail">
+                        <input type="text" class="input" name="newEmail" v-model="email.newEmail" autocomplete="none">
                     
                         <input type="submit" value="Change e-mail" class="button" @click="changeEmail()" />
                 </form>
@@ -30,11 +31,11 @@
             <div class="dropdown" v-if="passwordDropDown">
                 <form method="post" @submit.prevent="" novalidate="true">
                     <label for="password">Current password</label>
-                        <input type="password" class="input" name="password" v-model="password.password">
+                        <input type="password" class="input" name="password" v-model="password.password" autocomplete="none">
                    <label for="newPW">New password</label>
-                        <input type="password" class="input" name="newPW" v-model="password.newPW">
+                        <input type="password" class="input" name="newPW" v-model="password.newPW" autocomplete="none">
                     <label for="repeatPW">Repeat new password</label>
-                        <input type="password" class="input" name="repeatPW" v-model="password.repeatPW">
+                        <input type="password" class="input" name="repeatPW" v-model="password.repeatPW" autocomplete="none">
 
                         <input type="submit" value="Change password" class="button" @click="changePassword()" />
                 </form>
@@ -67,6 +68,7 @@
 
 <script>
 import Header from '../components/Header.vue'
+import GoBack from '../components/GoBack.vue' 
 import VueJwtDecode from 'vue-jwt-decode'; //to decrypt the key from local storage
   import axios from 'axios' // use of axios to do functions like POST, PUT, DELETE for the database
 
@@ -74,6 +76,7 @@ export default {
     name: 'Configuration',
     components: {
       Header,
+      GoBack
     },
     data(){
       return { 

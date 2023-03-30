@@ -1,20 +1,21 @@
 <template>
     <Header />
     <section id="container">
+        <GoBack />
         <div id="content">
             <form method="post" @submit.prevent="" novalidate="true" enctype="multipart/form-data">
                 <label for="firstName">First Name</label>
-                    <input type="text" class="input" name="firstName" v-model="formData[0].firstName">
+                    <input type="text" class="input" name="firstName" v-model="formData[0].firstName" autocomplete="none">
 
                 <label for="lastName">Last Name</label>
-                    <input type="text" class="input" name="lastName" v-model="formData[0].lastName">
+                    <input type="text" class="input" name="lastName" v-model="formData[0].lastName" autocomplete="none">
                 
                 <label for="jobPosition">Job position</label>
-                    <input type="text" class="input" name="jobPosition" v-model="formData[0].jobPosition">
+                    <input type="text" class="input" name="jobPosition" v-model="formData[0].jobPosition" autocomplete="none">
                
                     <div id="fake-label"><p>Profile picture</p> </div><img src="../assets/circle-check-solid.svg" v-if="this.formData[0].profilePicture" id="imgOk">
                     <label for="profilePicture" id="fake-input">Change file</label> 
-                    <input type="file" id="profilePicture" name="profilePicture" @change="onFile($event)">
+                    <input type="file" id="profilePicture" name="profilePicture" @change="onFile($event)" autocomplete="none">
                
                     <input type="submit" value="Update" class="button" @click="updateProfile()" />
             </form>
@@ -27,13 +28,15 @@
 
 <script>
   import Header from '../components/Header.vue' 
+  import GoBack from '../components/GoBack.vue' 
   import VueJwtDecode from 'vue-jwt-decode'; //to decrypt the key from local storage
   import axios from 'axios' // use of axios to do functions like POST, PUT, DELETE for the database
 
     export default {
         name: 'ChangeProfile',
         components: {
-            Header
+            Header,
+            GoBack
         },
         data() {
             return {

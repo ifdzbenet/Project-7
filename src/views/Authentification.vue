@@ -11,13 +11,13 @@
                 <div id="form-sign-up" v-if="showSignUp">
                     <form method="post" @submit.prevent="" novalidate="true">
                         <label for="firstName">First Name</label>
-                        <input type="text" id="firstName" name="firstName" v-model="formData.firstName">
+                        <input type="text" id="firstName" name="firstName" v-model="formData.firstName" autocomplete="none">
                         <div class="fake_hr"></div>
                         <label for="lastName">Last Name</label>
-                        <input type="text" id="lastName"  name="lastName" v-model="formData.lastName">
+                        <input type="text" id="lastName"  name="lastName" v-model="formData.lastName" autocomplete="none">
                         <div class="fake_hr"></div>
                         <label for="email">E-mail</label>
-                        <input type="email" id="email" name="email" v-model="formData.email">
+                        <input type="email" id="email" name="email" v-model="formData.email" autocomplete="none">
                         <div class="fake_hr"></div>
                         <label for="password">Password</label>
                         <input type="password" id="password" name="password" v-model="formData.password">
@@ -29,7 +29,7 @@
                 <div id="form-log-in" v-if="showLogIn"> 
                     <form method="post" @submit.prevent="" novalidate="true">
                         <label for="email">E-mail</label>
-                        <input type="email" id="email" name="email" v-model="formData.email">
+                        <input type="email" id="email" name="email" v-model="formData.email" autocomplete="none">
                         <div class="fake_hr"></div>
                         <label for="password">Password</label>
                         <input type="password" id="password" name="password" v-model="formData.password">
@@ -38,9 +38,9 @@
                     </form>
                     <p>Need an account? <button class="toggle_button" @click="turnSignUp()">Sign up</button></p>
                 </div>
-            </div>
-            <div id="errormsg" v-if="authError">
-                <img src="../assets/circle-xmark-regular.svg"><p>Error: </p><p id="error"> {{ errormsg }}</p>
+                <div id="errormsg" v-if="authError">
+                    <img src="../assets/circle-xmark-regular.svg"><p>Error: </p><p id="error"> {{ errormsg }}</p>
+                </div>
             </div>
         </div>
     </div>
@@ -213,6 +213,8 @@ p {
 #form-body {
     padding: 10px 20px 0 20px;
     height: 55%;
+    display: flex;
+    flex-direction: column;
 }
 
 #form-log-in {
