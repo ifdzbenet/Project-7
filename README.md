@@ -1,19 +1,5 @@
-# seventh-project
+# Public Git Repository for my OpenClassrooms Seventh Project
 
-## Project setup
-```
-npm install
-```
+Environments used for the development: Visual Studio Code for the programming, UniServer for the database hosting. 
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+Link to the repository: https://github.com/ifdzbenet/Project-7/
